@@ -32,10 +32,10 @@
       </el-col>
     </el-row>
     <div class="section-2">
-      <el-table :data="tableData" stripe height="px">
+      <el-table :data="tableData.data" stripe height="px">
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column v-for="item in setting.tableOption" :key="item.key" :label="item.label"></el-table-column>
-        <el-table-column width="240" label="操作">
+        <el-table-column width="300" label="操作">
           <el-button type="primary" plain>编辑</el-button>
           <el-button type="danger" plain>删除</el-button>
           <el-button type="warning" plain>下架</el-button>
@@ -44,9 +44,9 @@
     </div>
     <div class="section-3">
       <el-pagination
+        :total="tableData.total"
         :layout="setting.pagination.layout"
-        :total="1000"
-        :page-size="setting.pagination.pageSizes"
+        :page-sizes="setting.pagination.pageSizes"
         background
       ></el-pagination>
     </div>
@@ -67,7 +67,13 @@ export default {
         // sort: {},
         status: ''
       },
-      tableData: new Array(100).fill(1)
+      tableData: {
+        data: new Array(100).fill(1),
+        current: 2,
+        pages: 0,
+        size: 10,
+        total: 1000,
+      }
     }
   },
   created () {
