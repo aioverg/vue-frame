@@ -50,6 +50,7 @@ export default {
   }
   .el-main {
     background-color: #f2f4f7;
+    padding: 0;
   }
 }
 </style>

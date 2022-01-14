@@ -1,14 +1,14 @@
 <template>
   <div id="home">
     <el-row :gutter="80" class="section-1">
-      <template v-for="(item, index) in setting.marks">
+      <template v-for="(item, index) in setting.marksOption">
         <el-col :span="6" v-if="index <=3" :key="item.key">
           <div class="marks-item">{{item.label + '：' + 99999}}</div>
         </el-col>
       </template>
     </el-row>
     <el-row :gutter="80" class="section-2">
-      <template v-for="(item, index) in setting.marks">
+      <template v-for="(item, index) in setting.marksOption">
         <el-col :span="6" v-if="index >3" :key="item.key">
           <div class="marks-item">{{item.label + '：' + 99999}}</div>
         </el-col>
@@ -26,17 +26,24 @@
     </el-row>
     <div class="section-4">
       <div class="s4-title">工单消息</div>
-      <el-table :data="tableData" style="width: 100%">
-        <el-table-column prop="date" label="Date" width="180" />
-        <el-table-column prop="name" label="Name" width="180" />
-        <el-table-column prop="address" label="Address" />
+      <el-table :data="tableData" stripe style="width: 100%; padding: 0 20px">
+        <el-table-column type="index" width="80" label="编号" />
+        <el-table-column
+          v-for="item in setting.tableOption"
+          :key="item.key"
+          :prop="item.key"
+          :label="item.label"
+          min-width="180"
+        />
+        <!-- <el-table-column prop="name" label="Name" width="180" />
+        <el-table-column prop="address" label="Address" />-->
       </el-table>
     </div>
   </div>
 </template>
 
 <script>
-import { marks, chartOption } from './setting'
+import { marksOption, chartOption, tableOption } from './setting'
 import * as echarts from 'echarts/core'
 import { BarChart, LineChart } from 'echarts/charts'
 import { CanvasRenderer } from 'echarts/renderers';
@@ -59,30 +66,20 @@ export default {
     return {
       tableData: [
         {
-          date: '2016-05-03',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
+          user: 'Tom',
+          status: '正常',
+          date: '2022-01-01',
         },
         {
-          date: '2016-05-02',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-04',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
-        },
-        {
-          date: '2016-05-01',
-          name: 'Tom',
-          address: 'No. 189, Grove St, Los Angeles',
+          user: 'Tom',
+          status: '正常',
+          date: '2022-01-01',
         },
       ]
     }
   },
   created () {
-    this.setting = { marks, chartOption }
+    this.setting = { marksOption, chartOption, tableOption }
     this.noRender = {
       barChart: null,
       lineChart: null
@@ -130,7 +127,9 @@ export default {
 #home {
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 20px;
   .section-2 {
     margin: 40px 0;
   }
@@ -140,6 +139,7 @@ export default {
   .section-4 {
     .s4-title {
       background: #ffffff;
+      padding: 10px 20px;
     }
   }
   .marks-item {

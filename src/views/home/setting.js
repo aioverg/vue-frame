@@ -1,5 +1,5 @@
 // 指标卡
-const marks = [
+const marksOption = [
   {
     key: 'todayAddNumber',
     label: '今日新增',
@@ -48,7 +48,16 @@ const chartOption = {
   },
 }
 
+// 表格设置
+
+const tableOption = [
+  { key: 'user', label: '用户' },
+  { key: 'status', label: '状态' },
+  { key: 'date', label: '创建日期' },
+]
+
 export {
-  marks,
-  chartOption
+  marksOption,
+  chartOption,
+  tableOption
 }

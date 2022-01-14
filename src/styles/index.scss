@@ -17,3 +17,11 @@ body {
 #app {
   height: 100%;
 }
+
+/** elemelt 组件的全局样式修改 --- start **/
+.el-table {
+  height: 100%;
+  width: 100%;
+}
+
+/** elemelt 组件的全局样式修改 --- end **/
