@@ -44,6 +44,7 @@
     </div>
     <div class="section-3">
       <el-pagination
+        v-model:currentPage="tableData.current"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
