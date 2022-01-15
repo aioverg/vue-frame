@@ -1,6 +1,6 @@
 <template>
   <div id="layout-aside">
-    <div class="title">标题</div>
+    <div class="title" @click="home">闪电树熊</div>
     <el-menu
       active-text-color="#ffffff"
       background-color="#2c3d59"
@@ -34,7 +34,9 @@
             :key="item2.name"
             :index="item2.name"
             :route="item2"
-          >{{item2.meta.title}}</el-menu-item>
+          >
+            <span style="padding-left: 22px">{{item2.meta.title}}</span>
+          </el-menu-item>
         </el-sub-menu>
       </template>
     </el-menu>
@@ -58,8 +60,16 @@ export default {
       })
     },
   },
+  methods: {
+    home(){
+      this.$router.push('/home')
+    },
+    init(){
+      this.active = this.$router.currentRoute._value.name
+    }
+  },
   mounted () {
-
+    this.init()
   },
 }
 </script>
@@ -71,7 +81,12 @@ export default {
   flex-direction: column;
   .title {
     height: 60px;
+    line-height: 60px;
+    font-size: 18px;
     background-color: #4b7efe;
+    color: #ffffff;
+    text-align: center;
+    cursor: pointer;
   }
   .el-menu {
     flex: 1;

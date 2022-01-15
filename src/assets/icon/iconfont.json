@@ -1,0 +1,16 @@
+{
+  "id": "3143676",
+  "name": "koala-admin",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "9012695",
+      "name": "新增用户",
+      "font_class": "xinzengyonghu",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    }
+  ]
+}

@@ -3,34 +3,42 @@ const marksOption = [
   {
     key: 'todayAddNumber',
     label: '今日新增',
+    icon: '',
   },
   {
     key: 'todaySubscribeNumber',
     label: '今日订阅',
+    icon: '',
   },
   {
     key: 'activeUserNumber',
     label: '活跃用户数',
+    icon: '',
   },
   {
     key: 'totalUserNumber',
     label: '总用户数',
+    icon: '',
   },
   {
     key: 'todayIncome',
     label: '今日收入',
+    icon: '',
   },
   {
     key: 'totalRevenue',
     label: '总利润',
+    icon: '',
   },
   {
     key: 'totalIncome',
     label: '总收入',
+    icon: '',
   },
   {
     key: 'totalExpense',
     label: '总支出',
+    icon: '',
   },
 ]
 
