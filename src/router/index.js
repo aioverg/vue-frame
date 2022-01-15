@@ -32,6 +32,12 @@ const routes = [
         meta: { title: '订阅列表', icon: 'dashboard', noCache: true }
       },
       {
+        path: '/subscription/group',
+        component: () => import('@/views/subscription/group'),
+        name: 'SubscriptionGroup',
+        meta: { title: '分组管理', icon: 'dashboard', noCache: true }
+      },
+      {
         path: '/subscription/activity',
         component: () => import('@/views/subscription/activity'),
         name: 'SubscriptionActivity',
@@ -42,12 +48,6 @@ const routes = [
         component: () => import('@/views/subscription/coupon'),
         name: 'SubscriptionCoupon',
         meta: { title: '代金券', icon: 'dashboard', noCache: true }
-      },
-      {
-        path: '/subscription/group',
-        component: () => import('@/views/subscription/group'),
-        name: 'SubscriptionGroup',
-        meta: { title: '分组管理', icon: 'dashboard', noCache: true }
       },
     ]
   },

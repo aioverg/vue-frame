@@ -1,28 +1,33 @@
 <template>
   <div id="subscription-list">
-    <el-row class="section-1" align="middle">
-      <el-col  :xs="24" :sm="12">
-        <el-row :gutter="20">
-          <el-col :xs="24" :sm="8">
-            <el-input v-model="form.name" placeholder="请输入服务名"></el-input>
-          </el-col>
-          <el-col :xs="24" :sm="8">
-            <el-select v-model="form.status" placeholder="请选择状态">
-              <!-- <el-option v-for="" :key=""></el-option> -->
-            </el-select>
-          </el-col>
-          <el-col :xs="24" :sm="8">
-            <el-select v-model="form.groupId" placeholder="请选择分组">
-              <!-- <el-option v-for="" :key=""></el-option> -->
-            </el-select>
-          </el-col>
-        </el-row>
-      </el-col>
-      <el-col :xs="{span: 24}" :sm="{span: 11, push: 1}">
-        <el-button type="primary" @click="search">搜索</el-button>
-        <el-button type="primary" @click="add">新增</el-button>
-      </el-col>
-    </el-row>
+    <div class="section-1">
+      <el-row align="middle" :gutter="20">
+        <el-col :xs="24" :sm="12">
+          <el-row :gutter="20">
+            <el-col :xs="24" :sm="8">
+              <el-input
+                v-model="form.name"
+                placeholder="请输入服务名"
+              ></el-input>
+            </el-col>
+            <el-col :xs="24" :sm="8">
+              <el-select v-model="form.status" placeholder="请选择状态">
+                <!-- <el-option v-for="" :key=""></el-option> -->
+              </el-select>
+            </el-col>
+            <el-col :xs="24" :sm="8">
+              <el-select v-model="form.groupId" placeholder="请选择分组">
+                <!-- <el-option v-for="" :key=""></el-option> -->
+              </el-select>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :xs="{ span: 24 }" :sm="{ span: 12 }">
+          <el-button type="primary" @click="search">搜索</el-button>
+          <el-button type="primary" @click="add">新增</el-button>
+        </el-col>
+      </el-row>
+    </div>
     <div class="section-2">
       <el-table :data="tableData.data" stripe height="px">
         <el-table-column type="index" width="80" label="编号" />
