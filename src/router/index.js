@@ -74,7 +74,7 @@ const routes = [
         path: '/application/rule',
         component: () => import('@/views/application/rule'),
         name: 'ApplicationRule',
-        meta: { title: '代理规则', icon: 'dashboard', noCache: true }
+        meta: { title: '访问策略', icon: 'dashboard', noCache: true }
       },
     ]
   },

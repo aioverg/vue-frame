@@ -1,5 +1,5 @@
 <template>
-  <div id="subscription-list">
+  <div id="subscription-coupon">
     <div class="section-1">
       <el-row align="middle" :gutter="20">
         <el-col :xs="24" :sm="12">
@@ -74,7 +74,7 @@
 <script>
 import { tableOption, pagination } from "./setting";
 export default {
-  name: "SubscriptionList",
+  name: "SubscriptionCoupon",
   data() {
     return {
       form: {
@@ -130,7 +130,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-#subscription-list {
+#subscription-coupon {
   width: 100%;
   height: 100%;
   overflow: hidden;
