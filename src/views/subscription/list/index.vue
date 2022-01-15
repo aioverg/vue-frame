@@ -1,41 +1,26 @@
 <template>
   <div id="subscription-list">
     <el-row class="section-1" align="middle">
-      <el-col :span="12">
-        <el-form>
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-form-item>
-                <el-input
-                  v-model="form.name"
-                  placeholder="请输入服务名"
-                ></el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item>
-                <el-select
-                  v-model="form.status"
-                  placeholder="请选择状态"
-                  style="width: 100%"
-                >
-                  <!-- <el-option v-for="" :key=""></el-option> -->
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col :span="8">
-              <el-form-item>
-                <el-select v-model="form.groupId" placeholder="请选择分组">
-                  <!-- <el-option v-for="" :key=""></el-option> -->
-                </el-select>
-              </el-form-item>
-            </el-col>
-          </el-row>
-        </el-form>
+      <el-col  :xs="24" :sm="12">
+        <el-row :gutter="20">
+          <el-col :xs="24" :sm="8">
+            <el-input v-model="form.name" placeholder="请输入服务名"></el-input>
+          </el-col>
+          <el-col :xs="24" :sm="8">
+            <el-select v-model="form.status" placeholder="请选择状态">
+              <!-- <el-option v-for="" :key=""></el-option> -->
+            </el-select>
+          </el-col>
+          <el-col :xs="24" :sm="8">
+            <el-select v-model="form.groupId" placeholder="请选择分组">
+              <!-- <el-option v-for="" :key=""></el-option> -->
+            </el-select>
+          </el-col>
+        </el-row>
       </el-col>
-      <el-col :span="11" :push="1">
-        <el-button type="primary" class="s1-bt">搜索</el-button>
-        <el-button type="primary" class="s1-bt">新增</el-button>
+      <el-col :xs="{span: 24}" :sm="{span: 11, push: 1}">
+        <el-button type="primary" @click="search">搜索</el-button>
+        <el-button type="primary" @click="add">新增</el-button>
       </el-col>
     </el-row>
     <div class="section-2">
@@ -46,10 +31,10 @@
           :key="item.key"
           :label="item.label"
         ></el-table-column>
-        <el-table-column width="300" label="操作">
-          <el-button type="primary" plain>编辑</el-button>
-          <el-button type="danger" plain>删除</el-button>
-          <el-button type="warning" plain>下架</el-button>
+        <el-table-column width="240" label="操作">
+          <el-button type="primary" plain @click="edit">编辑</el-button>
+          <el-button type="danger" plain @click="del">删除</el-button>
+          <el-button type="warning" plain @click="stop">下架</el-button>
         </el-table-column>
       </el-table>
     </div>
@@ -61,8 +46,8 @@
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
+        @size-change="sizeChange"
+        @current-change="currentChange"
       ></el-pagination>
     </div>
   </div>
@@ -92,11 +77,34 @@ export default {
     };
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`${val} items per page`);
+    // 搜索
+    search() {
+      console.log("搜索");
     },
-    handleCurrentChange(val) {
-      console.log(`current page: ${val}`);
+    // 新增
+    add() {
+      console.log("新增");
+    },
+    // 编辑
+    edit() {
+      console.log("编辑");
+    },
+    // 删除
+    del() {
+      console.log("删除");
+    },
+    // 禁用|下架
+    stop() {
+      console.log("禁用下架");
+    },
+    // 改变分页
+    sizeChange(val) {
+      this.tableData.size = val;
+      console.log(`分页${val}`, this.tableData);
+    },
+    // 改变页码
+    currentChange(val) {
+      console.log(`当前页码: ${val}`, this.tableData);
     },
   },
   created() {
@@ -119,14 +127,14 @@ export default {
   .section-1 {
     background: #ffffff;
     min-height: 80px;
-    padding: 18px 20px 0 20px;
-    .s1-bt {
-      margin-bottom: 18px;
+    padding: 15px 20px;
+    .el-col {
+      margin: 5px 0;
     }
   }
   .section-2 {
     background: #ffffff;
-    margin-top: 30px;
+    margin-top: 20px;
     flex: 1;
     overflow: hidden;
     padding: 20px;
