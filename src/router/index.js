@@ -92,12 +92,6 @@ const routes = [
         meta: { title: '用户列表', icon: 'dashboard', noCache: true }
       },
       {
-        path: '/member/log',
-        component: () => import('@/views/member/log'),
-        name: 'MemberLog',
-        meta: { title: '操作日志', icon: 'dashboard', noCache: true }
-      },
-      {
         path: '/member/order',
         component: () => import('@/views/member/order'),
         name: 'MemberOrder',
@@ -108,6 +102,12 @@ const routes = [
         component: () => import('@/views/member/workOrder'),
         name: 'MemberWorkOrder',
         meta: { title: '工单管理', icon: 'dashboard', noCache: true }
+      },
+      {
+        path: '/member/log',
+        component: () => import('@/views/member/log'),
+        name: 'MemberLog',
+        meta: { title: '操作日志', icon: 'dashboard', noCache: true }
       },
     ]
   },

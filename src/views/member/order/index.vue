@@ -2,27 +2,41 @@
   <div id="subscription-list">
     <div class="section-1">
       <el-row align="middle" :gutter="20">
-        <el-col :xs="24" :sm="12">
+        <el-col :xs="24" :sm="17">
           <el-row :gutter="20">
-            <el-col :xs="24" :sm="8">
+            <el-col :xs="24" :sm="4">
               <el-input
                 v-model="form.name"
-                placeholder="请输入服务名"
+                placeholder="请输入用户名"
               ></el-input>
             </el-col>
-            <el-col :xs="24" :sm="8">
-              <el-select v-model="form.status" placeholder="请选择状态">
+            <el-col :xs="24" :sm="5">
+              <el-select v-model="form.serve" placeholder="请选择订阅服务">
                 <!-- <el-option v-for="" :key=""></el-option> -->
               </el-select>
             </el-col>
-            <el-col :xs="24" :sm="8">
-              <el-select v-model="form.groupId" placeholder="请选择分组">
+            <el-col :xs="24" :sm="5">
+              <el-select v-model="form.status" placeholder="请选择订单状态">
                 <!-- <el-option v-for="" :key=""></el-option> -->
               </el-select>
+            </el-col>
+            <el-col :xs="24" :sm="5">
+              <el-select v-model="form.time" placeholder="请选择订阅时长">
+                <!-- <el-option v-for="" :key=""></el-option> -->
+              </el-select>
+            </el-col>
+            <el-col :xs="24" :sm="5">
+              <el-date-picker
+                v-model="form.createDate"
+                type="date"
+                placeholder="请选择创建时间"
+                style="width: 100%"
+              >
+              </el-date-picker>
             </el-col>
           </el-row>
         </el-col>
-        <el-col :xs="{ span: 24 }" :sm="{ span: 12 }">
+        <el-col :xs="{ span: 24 }" :sm="{ span: 7 }">
           <el-button type="primary" @click="search">搜索</el-button>
           <el-button type="primary" @click="add">新增</el-button>
         </el-col>
@@ -36,11 +50,6 @@
           :key="item.key"
           :label="item.label"
         ></el-table-column>
-        <el-table-column width="240" label="操作">
-          <el-button type="primary" plain @click="edit">编辑</el-button>
-          <el-button type="danger" plain @click="del">删除</el-button>
-          <el-button type="warning" plain @click="stop">下架</el-button>
-        </el-table-column>
       </el-table>
     </div>
     <div class="section-3">
@@ -65,12 +74,11 @@ export default {
   data() {
     return {
       form: {
-        groupId: "",
         name: "",
-        pageNo: "",
-        pageSize: "",
-        // sort: {},
         status: "",
+        serve: "",
+        time: "",
+        createDate: "",
       },
       tableData: {
         data: new Array(100).fill(1),
@@ -89,18 +97,6 @@ export default {
     // 新增
     add() {
       console.log("新增");
-    },
-    // 编辑
-    edit() {
-      console.log("编辑");
-    },
-    // 删除
-    del() {
-      console.log("删除");
-    },
-    // 禁用|下架
-    stop() {
-      console.log("禁用下架");
     },
     // 改变分页
     sizeChange(val) {
