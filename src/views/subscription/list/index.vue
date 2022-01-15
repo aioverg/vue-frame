@@ -6,12 +6,19 @@
           <el-row :gutter="20">
             <el-col :span="8">
               <el-form-item>
-                <el-input v-model="form.name" placeholder="请输入服务名"></el-input>
+                <el-input
+                  v-model="form.name"
+                  placeholder="请输入服务名"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="8">
               <el-form-item>
-                <el-select v-model="form.status" placeholder="请选择状态" style="width: 100%">
+                <el-select
+                  v-model="form.status"
+                  placeholder="请选择状态"
+                  style="width: 100%"
+                >
                   <!-- <el-option v-for="" :key=""></el-option> -->
                 </el-select>
               </el-form-item>
@@ -34,7 +41,11 @@
     <div class="section-2">
       <el-table :data="tableData.data" stripe height="px">
         <el-table-column type="index" width="80" label="编号" />
-        <el-table-column v-for="item in setting.tableOption" :key="item.key" :label="item.label"></el-table-column>
+        <el-table-column
+          v-for="item in setting.tableOption"
+          :key="item.key"
+          :label="item.label"
+        ></el-table-column>
         <el-table-column width="300" label="操作">
           <el-button type="primary" plain>编辑</el-button>
           <el-button type="danger" plain>删除</el-button>
@@ -45,42 +56,53 @@
     <div class="section-3">
       <el-pagination
         v-model:currentPage="tableData.current"
+        :page-size="30"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
       ></el-pagination>
     </div>
   </div>
 </template>
 
 <script>
-import { tableOption, pagination } from './setting'
+import { tableOption, pagination } from "./setting";
 export default {
-  name: 'SubscriptionList',
-  data () {
+  name: "SubscriptionList",
+  data() {
     return {
       form: {
-        groupId: '',
-        name: '',
-        pageNo: '',
-        pageSize: '',
+        groupId: "",
+        name: "",
+        pageNo: "",
+        pageSize: "",
         // sort: {},
-        status: ''
+        status: "",
       },
       tableData: {
         data: new Array(100).fill(1),
         current: 2,
         pages: 0,
-        size: 10,
+        size: 20,
         total: 1000,
-      }
-    }
+      },
+    };
   },
-  created () {
-    this.setting = { tableOption, pagination }
-  }
-}
+  methods: {
+    handleSizeChange(val) {
+      console.log(`${val} items per page`);
+    },
+    handleCurrentChange(val) {
+      console.log(`current page: ${val}`);
+    },
+  },
+  created() {
+    this.setting = { tableOption, pagination };
+  },
+};
 </script>
 
 <style lang="scss" scoped>
