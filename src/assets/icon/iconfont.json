@@ -6,11 +6,88 @@
   "description": "",
   "glyphs": [
     {
-      "icon_id": "9012695",
-      "name": "新增用户",
-      "font_class": "xinzengyonghu",
-      "unicode": "e634",
-      "unicode_decimal": 58932
+      "icon_id": "868597",
+      "name": "icon-注册头像",
+      "font_class": "avatar",
+      "unicode": "e62d",
+      "unicode_decimal": 58925
+    },
+    {
+      "icon_id": "4605387",
+      "name": "newly",
+      "font_class": "jinrixinzeng",
+      "unicode": "e721",
+      "unicode_decimal": 59169
+    },
+    {
+      "icon_id": "5582334",
+      "name": "用户-fill",
+      "font_class": "zonghuyong",
+      "unicode": "e65c",
+      "unicode_decimal": 58972
+    },
+    {
+      "icon_id": "795554",
+      "name": "利润",
+      "font_class": "lirun",
+      "unicode": "e673",
+      "unicode_decimal": 58995
+    },
+    {
+      "icon_id": "1133836",
+      "name": "支出_sel",
+      "font_class": "zhichu",
+      "unicode": "e667",
+      "unicode_decimal": 58983
+    },
+    {
+      "icon_id": "2742661",
+      "name": "收入",
+      "font_class": "shouru",
+      "unicode": "e677",
+      "unicode_decimal": 58999
+    },
+    {
+      "icon_id": "5092860",
+      "name": "收入",
+      "font_class": "jinrishouru",
+      "unicode": "e629",
+      "unicode_decimal": 58921
+    },
+    {
+      "icon_id": "5873060",
+      "name": "活跃用户",
+      "font_class": "huoyueyonghu",
+      "unicode": "e624",
+      "unicode_decimal": 58916
+    },
+    {
+      "icon_id": "13972563",
+      "name": "我的订阅",
+      "font_class": "dingyue",
+      "unicode": "e69b",
+      "unicode_decimal": 59035
+    },
+    {
+      "icon_id": "963814",
+      "name": "客户会员管理",
+      "font_class": "yonghuguanli",
+      "unicode": "e623",
+      "unicode_decimal": 58915
+    },
+    {
+      "icon_id": "19567124",
+      "name": "服务管理",
+      "font_class": "dingyuefuwu",
+      "unicode": "e679",
+      "unicode_decimal": 59001
+    },
+    {
+      "icon_id": "17711780",
+      "name": "应用",
+      "font_class": "yingyongguanli",
+      "unicode": "e824",
+      "unicode_decimal": 59428
     }
   ]
 }

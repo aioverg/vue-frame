@@ -1,15 +1,21 @@
 <template>
-  <div>
-    ICON
-    <svg class="icon" aria-hidden="true">
-    <use xlink:href="#icon-xinzengyonghu"></use>
-</svg>
-  </div>
+  <el-icon :size="size" :color="color" :class="class" :style="style" >
+    <svg aria-hidden="true">
+      <use :xlink:href="`#${iconName}`"></use>
+    </svg>
+  </el-icon>
 </template>
 
 <script>
-import '@/assets/icon/iconfont'
+import "@/assets/icon/iconfont"
 export default {
-  name: 'KlIcon',
-}
+  name: "KlIcon",
+  props: {
+    iconName: String,
+    size: [String, Number],
+    color: String,
+    class: String,
+    style: String,
+  }
+};
 </script>

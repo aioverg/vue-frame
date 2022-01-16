@@ -16,17 +16,12 @@
           :index="item1.name"
         >
           <template #title>
-            <el-icon>
-              <component :is="item1.meta.icon"></component>
-            </el-icon>
-            <span>{{item1.meta.title}}</span>
+            <span style="padding-left: 28px">{{item1.meta.title}}</span>
           </template>
         </el-menu-item>
         <el-sub-menu v-else :key="item1.name" :index="item1.name">
           <template #title>
-            <el-icon>
-              <component :is="item1.meta.icon"></component>
-            </el-icon>
+            <kl-icon :iconName="item1.meta.icon" />
             <span>{{item1.meta.title}}</span>
           </template>
           <el-menu-item

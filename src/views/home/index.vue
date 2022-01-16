@@ -1,17 +1,22 @@
 <template>
   <div id="home">
-    <kl-icon />
     <el-row :gutter="60" class="section-1">
       <template v-for="(item, index) in setting.marksOption">
         <el-col :xs="24" :sm="12" :md="6" v-if="index <= 3" :key="item.key">
-          <div class="marks-item">{{ item.label + "：" + 99999 }}</div>
+          <div class="marks-item">
+            <span><kl-icon :icon-name="item.icon" size="34px" /></span>
+            <span>{{ item.label + "：" + 99999 }}</span>
+          </div>
         </el-col>
       </template>
     </el-row>
     <el-row :gutter="60" class="section-2">
       <template v-for="(item, index) in setting.marksOption">
         <el-col :xs="24" :sm="12" :md="6"  v-if="index > 3" :key="item.key">
-          <div class="marks-item">{{ item.label + "：" + 99999 }}</div>
+          <div class="marks-item">
+            <span><kl-icon :icon-name="item.icon" size="34px" /></span>
+            <span>{{ item.label + "：" + 99999 }}</span>
+          </div>
         </el-col>
       </template>
     </el-row>
@@ -144,12 +149,11 @@ export default {
   .marks-item {
     border-radius: 2px;
     height: 100px;
-    line-height: 100px;
+    display: flex;
+    align-items: center;
     background-color: #ffffff;
     text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    
     padding: 0 20px;
     margin: 10px 0 ;
     font-weight: bold;
@@ -158,6 +162,14 @@ export default {
     cursor: default;
     &:hover{
       box-shadow: 0 0 8px 0 rgba(0,0,0,0.1);
+    }
+    & > :first-child {
+      margin-right: 14px;
+    }
+    & > :last-child {
+      overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     }
   }
   .chart-content {

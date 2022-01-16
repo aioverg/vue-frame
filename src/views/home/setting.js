@@ -3,42 +3,42 @@ const marksOption = [
   {
     key: 'todayAddNumber',
     label: '今日新增',
-    icon: '',
+    icon: 'icon-jinrixinzeng',
   },
   {
     key: 'todaySubscribeNumber',
     label: '今日订阅',
-    icon: '',
+    icon: 'icon-dingyue',
   },
   {
     key: 'activeUserNumber',
     label: '活跃用户数',
-    icon: '',
+    icon: 'icon-huoyueyonghu',
   },
   {
     key: 'totalUserNumber',
     label: '总用户数',
-    icon: '',
+    icon: 'icon-zonghuyong',
   },
   {
     key: 'todayIncome',
     label: '今日收入',
-    icon: '',
+    icon: 'icon-jinrishouru',
   },
   {
     key: 'totalRevenue',
     label: '总利润',
-    icon: '',
+    icon: 'icon-lirun',
   },
   {
     key: 'totalIncome',
     label: '总收入',
-    icon: '',
+    icon: 'icon-shouru',
   },
   {
     key: 'totalExpense',
     label: '总支出',
-    icon: '',
+    icon: 'icon-zhichu',
   },
 ]
 
