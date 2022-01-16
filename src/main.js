@@ -8,6 +8,7 @@ import * as elIcon from '@element-plus/icons-vue'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 import 'element-plus/dist/index.css'
 import '@/styles/index.scss'
+import KlIcon from '@/components/klIcon'
 
 const app = createApp(App)
 app.use(router)
@@ -16,4 +17,5 @@ app.use(ElementPlus, { locale })
 Object.keys(elIcon).forEach(key => {
   app.component(key, elIcon[key])
 })
+app.component('KlIcon', KlIcon)
 app.mount('#app')

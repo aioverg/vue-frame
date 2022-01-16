@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <kl-icon />
     <el-row :gutter="60" class="section-1">
       <template v-for="(item, index) in setting.marksOption">
         <el-col :xs="24" :sm="12" :md="6" v-if="index <= 3" :key="item.key">
