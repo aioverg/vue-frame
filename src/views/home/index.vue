@@ -23,7 +23,7 @@
     <el-row :gutter="60" class="section-3">
       <el-col :sm="24" :md="12">
         <div class="chart-label">用户增长</div>
-        <div class="chart-content" ref="lineRef" style="margin-bottom: 10px"></div>
+        <div class="chart-content" ref="lineRef"></div>
       </el-col>
       <el-col :sm="24" :md="12">
         <div class="chart-label">每日订单</div>
@@ -176,6 +176,7 @@ export default {
     background-color: #ffffff;
     padding: 0 20px;
     height: 300px;
+    margin-bottom: 10px;
   }
   .chart-label {
     background-color: #ffffff;
