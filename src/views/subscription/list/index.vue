@@ -55,13 +55,16 @@
         @current-change="currentChange"
       ></el-pagination>
     </div>
+    <kl-edit ref="edit" />
   </div>
 </template>
 
 <script>
 import { tableOption, pagination } from "./setting";
+import KlEdit from './widget/edit.vue';
 export default {
   name: "SubscriptionList",
+  components: {KlEdit},
   data() {
     return {
       form: {
@@ -84,7 +87,7 @@ export default {
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
+      consoleEdit.log("搜索");
     },
     // 新增
     add() {
@@ -92,6 +95,7 @@ export default {
     },
     // 编辑
     edit() {
+      this.$refs.edit.switcher()
       console.log("编辑");
     },
     // 删除
