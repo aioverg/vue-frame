@@ -7,7 +7,6 @@
         :rules="noRender.rules"
         label-width="80px"
         :disabled="type === 'READ'"
-        class="formddd"
       >
         <el-form-item label="文本" prop="text">
           <el-input v-model="form.text" />
@@ -46,7 +45,7 @@ export default {
   props: {
     data: null, // 数据
     title: { type: String, default: '标题' }, // 标题
-    type: { type: String, default: 'READ' }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
+    type: { type: String, default: 'MODIFY' }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
     showFooter: { type: Boolean, default: true },  // 是否显示底部
     showCancel: { type: Boolean, default: true },  // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
@@ -86,31 +85,5 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.form {
-  max-height: 400px;
-  overflow: auto;
-  padding-right: 10px;
-
-  &::v-deep .el-input.is-disabled .el-input__inner {
-    color: #606266;
-    border: none;
-    background: #ffffff;
-  }
-  &::v-deep .el-textarea.is-disabled .el-textarea__inner {
-    color: #606266;
-    padding-left: 11px;
-    padding-right: 11px;
-    border: none;
-    background: #ffffff;
-  }
-  &::v-deep .el-input__suffix {
-    display: none;
-  }
-  &::v-deep .el-input-number.is-disabled .el-input__inner {
-    text-align: left;
-    padding: 0 11px;
-    border: none;
-    background: #ffffff;
-  }
-}
+@import "~@/styles/form.scss";
 </style>
