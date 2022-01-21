@@ -1,12 +1,19 @@
 <template>
   <el-dialog v-model="visible" :title="title" width="500px" :close-on-click-modal="false">
     <div class="form">
-      <el-form ref="formRef" :model="form" :rules="noRender.rules" label-width="80px">
+      <el-form
+        ref="formRef"
+        :model="form"
+        :rules="noRender.rules"
+        label-width="80px"
+        :disabled="type === 'READ'"
+        class="formddd"
+      >
         <el-form-item label="文本" prop="text">
           <el-input v-model="form.text" />
         </el-form-item>
         <el-form-item label="数字" prop="number">
-          <el-input-number v-model="form.number" :min="0" />
+          <el-input-number v-model="form.number" :min="0" :controls="type !== 'READ'" />
         </el-form-item>
         <el-form-item label="多行文本" prop="numText">
           <el-input
@@ -16,6 +23,12 @@
             show-word-limit
             :maxlength="300"
           />
+        </el-form-item>
+
+        <el-form-item label="选择" prop="numText">
+          <el-select v-model="form.select" placeholder="Select">
+            <el-option label="label" value="value"></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
     </div>
@@ -33,6 +46,7 @@ export default {
   props: {
     data: null, // 数据
     title: { type: String, default: '标题' }, // 标题
+    type: { type: String, default: 'READ' }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
     showFooter: { type: Boolean, default: true },  // 是否显示底部
     showCancel: { type: Boolean, default: true },  // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
@@ -43,7 +57,8 @@ export default {
       form: {
         text: '文本输入框',
         number: 222,
-        numText: '多行文本'
+        numText: '多行文本',
+        select: 'value'
       }
     };
   },
@@ -75,5 +90,27 @@ export default {
   max-height: 400px;
   overflow: auto;
   padding-right: 10px;
+
+  &::v-deep .el-input.is-disabled .el-input__inner {
+    color: #606266;
+    border: none;
+    background: #ffffff;
+  }
+  &::v-deep .el-textarea.is-disabled .el-textarea__inner {
+    color: #606266;
+    padding-left: 11px;
+    padding-right: 11px;
+    border: none;
+    background: #ffffff;
+  }
+  &::v-deep .el-input__suffix {
+    display: none;
+  }
+  &::v-deep .el-input-number.is-disabled .el-input__inner {
+    text-align: left;
+    padding: 0 11px;
+    border: none;
+    background: #ffffff;
+  }
 }
 </style>
