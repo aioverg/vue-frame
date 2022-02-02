@@ -12,81 +12,128 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px">
+      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :label="item.label"
+          :sortable="item.sortable"
+          :prop="item.key"
         ></el-table-column>
         <el-table-column width="160" label="操作">
-          <el-button type="primary" plain @click="edit">编辑</el-button>
-          <el-button type="danger" plain @click="del">删除</el-button>
+          <template #default="scope">
+          <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
+          <el-button type="danger" plain @click="del(scope)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="section-3">
       <el-pagination
-        v-model:currentPage="tableData.current"
-        :page-size="30"
+        v-model:currentPage="form.pageNo"
+        :page-size="form.pageSize"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
         @size-change="sizeChange"
-        @current-change="currentChange"
+        @current-change="pageNoChange"
       ></el-pagination>
     </div>
+    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
   </div>
 </template>
 
 <script>
 import { tableOption, pagination } from "./setting";
+import KlEdit from "./widget/edit.vue";
+import { groupList,groupDelete } from "@/api/subscription";
+import moment from "moment";
 export default {
   name: "SubscriptionGroup",
+  components: { KlEdit },
   data() {
     return {
       form: {
         name: "",
+        pageNo: 1,
+        pageSize: 10,
+        // sort:{
+        //   asc: false,
+        //   fieldName: "",
+        // },
       },
       tableData: {
-        data: new Array(100).fill(1),
-        current: 2,
-        pages: 0,
-        size: 20,
-        total: 1000,
+        data: [],
+        total: 0,
+      },
+      klProps: {
+        title: "",
       },
     };
   },
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
+      this.query()
     },
     // 新增
     add() {
+      this.klProps = { ...this.klProps, title: "新增分组" };
+      this.$refs.edit.switcher();
       console.log("新增");
     },
     // 编辑
-    edit() {
-      console.log("编辑");
+    edit(scope) {
+      this.klProps = { ...this.klProps, title: "编辑分组" };
+      this.$refs.edit.switcher(scope.row);
     },
     // 删除
-    del() {
-      console.log("删除");
+    del(scope) {
+      groupDelete(scope.row.id).then(() => {
+        this.query()
+      })
     },
     // 改变分页
     sizeChange(val) {
-      this.tableData.size = val;
-      console.log(`分页${val}`, this.tableData);
+      this.form.pageSize = val;
+      this.query()
     },
     // 改变页码
-    currentChange(val) {
-      console.log(`当前页码: ${val}`, this.tableData);
+    pageNoChange() {
+      this.query()
+    },
+    // 排序
+    sortChange(calb){
+      const asc = calb.order === 'ascending' ? true : (calb.order === 'descending' ? false : '')
+      const form = {...this.form}
+      if(typeof asc === 'boolean'){
+        form.sort = {asc: asc, fieldName: calb.column.rawColumnKey}
+      }
+      this.query(form)
+    },
+    // 查询
+    query(form) {
+      groupList(form || this.form).then((res) => {
+        res.data.records.forEach((item) => {
+          item.createDate = moment(item.createDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+          item.updateDate = moment(item.updateDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+        });
+        this.tableData = {
+          data: res.data.records,
+          total: res.data.total,
+        }
+      });
     },
   },
   created() {
     this.setting = { tableOption, pagination };
+    this.query();
   },
 };
 </script>

@@ -29,13 +29,14 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px">
+      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :prop="item.key"
           :label="item.label"
+          :sortable="item.sortable"
         ></el-table-column>
         <el-table-column width="240" label="操作">
           <template #default="scope">
@@ -104,7 +105,6 @@ export default {
     edit(scope) {
       this.klProps = { ...this.klProps, title: "编辑优惠活动" };
       this.$refs.edit.switcher(scope.row);
-      console.log("编辑", scope.row);
     },
     // 删除
     del(scope) {
@@ -120,7 +120,6 @@ export default {
       }).then(() => {
         this.query();
       })
-      console.log("禁用下架");
     },
     // 改变分页
     sizeChange(val) {
@@ -131,9 +130,18 @@ export default {
     pageNoChange(val) {
       this.query();
     },
+    // 排序
+    sortChange(calb){
+      const asc = calb.order === 'ascending' ? true : (calb.order === 'descending' ? false : '')
+      const form = {...this.form}
+      if(typeof asc === 'boolean'){
+        form.sort = {asc: asc, fieldName: calb.column.rawColumnKey}
+      }
+      this.query(form)
+    },
     // 查询
-    query() {
-      activityList(this.form).then((res) => {
+    query(form) {
+      activityList(form || this.form).then((res) => {
         res.data.records.forEach((item) => {
           item.createDate = moment(item.createDate).format(
             "YYYY-MM-DD hh:mm:ss"
@@ -146,7 +154,6 @@ export default {
           data: res.data.records,
           total: res.data.total,
         };
-        console.log(1111, res.data);
       });
     },
   },
