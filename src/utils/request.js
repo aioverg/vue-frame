@@ -1,11 +1,15 @@
 import axios from "axios";
 import { ElMessage } from "element-plus";
 import store from '@/store'
+import {getToken} from './auth'
 
 const request = axios.create({
-  baseURL: '/api/',
+  baseURL: '/api',
   timeout: 1000,
-  headers: { 'X-Custom-Header': 'foobar' }
+  headers: {
+    'X-Custom-Header': 'foobar',
+    'accessToken': getToken()
+  }
 });
 
 // 请求拦截
@@ -19,7 +23,7 @@ request.interceptors.request.use(config => {
 request.interceptors.response.use(
   response => {
     const res = response.data
-    if (res.code !== '1') {
+    if (res.code !== 1) {
       ElMessage({
         message: res.msg || 'Error',
         grouping: true,

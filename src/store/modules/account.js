@@ -18,12 +18,13 @@ const actions = {
   login ({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       loginApi(userInfo).then(res => {
-        commit('SET_TOKEN', res.token)
-        setToken(res.token)
+        debugger
+        commit('SET_TOKEN', res.data.token)
+        setToken(res.data.token)
         resolve()
       }).catch(error => {
-        commit('SET_TOKEN', 'res.token')
-        setToken('res.token')
+        commit('SET_TOKEN', res.data.token)
+        setToken(res.data.token)
         reject(error)
       })
     })

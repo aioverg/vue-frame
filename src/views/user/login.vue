@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import cryptoJs from 'crypto-js'
 export default {
   name: 'Login',
   data () {
@@ -34,7 +35,8 @@ export default {
   methods: {
     login () {
       this.$refs.formRef.validate().then(() => {
-        this.$store.dispatch('account/login', this.form).then(res => {
+        const password = cryptoJs.MD5(this.form.username + this.form.password).toString();
+        this.$store.dispatch('account/login', {...this.form, password: password}).then(res => {
           this.$router.push({ path: '/home' })
           console.log('登录成功', res)
         }).catch(error => {

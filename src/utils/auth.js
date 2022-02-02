@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-const TokenKey = 'security_token'
+const TokenKey = 'accessToken'
 
 function setToken (token) {
   Cookies.set(TokenKey, token)

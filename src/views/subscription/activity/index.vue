@@ -16,7 +16,7 @@
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.groupId" placeholder="请选择活动状态">
+              <el-select v-model="form.status" placeholder="请选择活动状态">
                 <!-- <el-option v-for="" :key=""></el-option> -->
               </el-select>
             </el-col>
@@ -34,86 +34,125 @@
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
+          :prop="item.key"
           :label="item.label"
         ></el-table-column>
         <el-table-column width="240" label="操作">
-          <el-button type="primary" plain @click="edit">编辑</el-button>
-          <el-button type="danger" plain @click="del">删除</el-button>
-          <el-button type="warning" plain @click="stop">禁用</el-button>
+          <template #default="scope">
+            <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
+            <el-button type="danger" plain @click="del(scope)">删除</el-button>
+            <el-button type="warning" plain @click="stop(scope)">
+              {{scope.row.status === 'disable' ? '启用' : '禁用'}}
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="section-3">
       <el-pagination
-        v-model:currentPage="tableData.current"
-        :page-size="30"
+        v-model:currentPage="this.form.pageNo"
+        :page-size="this.form.pageSize"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
         @size-change="sizeChange"
-        @current-change="currentChange"
+        @current-change="pageNoChange"
       ></el-pagination>
     </div>
+    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
   </div>
 </template>
 
 <script>
 import { tableOption, pagination } from "./setting";
+import KlEdit from "./widget/edit.vue";
+import { activityList,activityDelete,activityStatus } from "@/api/subscription";
+import moment from "moment";
 export default {
   name: "SubscriptionActivity",
+  components: { KlEdit },
   data() {
     return {
       form: {
-        groupId: "",
-        name: "",
-        pageNo: "",
-        pageSize: "",
+        name: "", // 名称
+        pageNo: 1,
+        pageSize: 20,
         // sort: {},
         status: "",
       },
+      klProps: {
+        title: "",
+      },
       tableData: {
-        data: new Array(100).fill(1),
-        current: 2,
-        pages: 0,
-        size: 20,
-        total: 1000,
+        data: [],
+        total: 0,
       },
     };
   },
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
+      this.query()
     },
     // 新增
     add() {
-      console.log("新增");
+      this.klProps = { ...this.klProps, title: "新增优惠活动" };
+      this.$refs.edit.switcher();
     },
     // 编辑
-    edit() {
-      console.log("编辑");
+    edit(scope) {
+      this.klProps = { ...this.klProps, title: "编辑优惠活动" };
+      this.$refs.edit.switcher(scope.row);
+      console.log("编辑", scope.row);
     },
     // 删除
-    del() {
-      console.log("删除");
+    del(scope) {
+      activityDelete(scope.row.id).then(() => {
+        this.query()
+      })
     },
     // 禁用|下架
-    stop() {
+    stop(scope) {
+      activityStatus({
+        id:scope.row.id,
+        status: scope.row.status === 'disable' ? 'active' : 'disable'
+      }).then(() => {
+        this.query();
+      })
       console.log("禁用下架");
     },
     // 改变分页
     sizeChange(val) {
-      this.tableData.size = val;
-      console.log(`分页${val}`, this.tableData);
+      this.form.pageSize = val;
+      this.query();
     },
     // 改变页码
-    currentChange(val) {
-      console.log(`当前页码: ${val}`, this.tableData);
+    pageNoChange(val) {
+      this.query();
+    },
+    // 查询
+    query() {
+      activityList(this.form).then((res) => {
+        res.data.records.forEach((item) => {
+          item.createDate = moment(item.createDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+          item.updateDate = moment(item.updateDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+        });
+        this.tableData = {
+          data: res.data.records,
+          total: res.data.total,
+        };
+        console.log(1111, res.data);
+      });
     },
   },
   created() {
     this.setting = { tableOption, pagination };
+    this.query();
   },
 };
 </script>

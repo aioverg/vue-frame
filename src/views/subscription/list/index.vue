@@ -55,7 +55,7 @@
         @current-change="currentChange"
       ></el-pagination>
     </div>
-    <kl-edit ref="edit" />
+    <kl-edit ref="edit" :title="klProps.title" />
   </div>
 </template>
 
@@ -74,6 +74,9 @@ export default {
         pageSize: "",
         // sort: {},
         status: "",
+      },
+      klProps: {
+        title: ''
       },
       tableData: {
         data: new Array(100).fill(1),
