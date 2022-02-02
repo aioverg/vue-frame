@@ -52,7 +52,7 @@
   </el-dialog>
 </template>
 <script>
-import { activityAdd } from "@/api/subscription";
+import { activityAdd,activityEdit } from "@/api/subscription";
 export default {
   name: "SubscriptionEdit",
   props: {
@@ -68,7 +68,6 @@ export default {
     return {
       visible: false,
       form: {
-        id: "",
         name: "",
         remark: "",
         rule: "",
@@ -101,7 +100,6 @@ export default {
         };
       } else {
         this.form = {
-          id: "",
           name: "",
           remark: "",
           rule: "",
@@ -117,12 +115,18 @@ export default {
       this.$refs.formRef
         .validate()
         .then(() => {
-          console.log("校验通过");
           this.form.rule = `${this.form._full} - ${this.form._reduce}`;
-          activityAdd(this.form).then(() => {
-            this.switcher();
-            this.refresh();
-          });
+          if (this.form.hasOwnProperty("id")) {
+            activityEdit(this.form).then(() => {
+              this.switcher();
+              this.refresh();
+            });
+          } else {
+            activityAdd(this.form).then(() => {
+              this.switcher();
+              this.refresh();
+            });
+          }
         })
         .catch((error) => {
           console.log("校验失败");

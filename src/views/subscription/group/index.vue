@@ -12,7 +12,12 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
@@ -23,8 +28,10 @@
         ></el-table-column>
         <el-table-column width="160" label="操作">
           <template #default="scope">
-          <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
-          <el-button type="danger" plain @click="del(scope)">删除</el-button>
+            <el-button type="primary" plain @click="edit(scope)"
+              >编辑</el-button
+            >
+            <el-button type="danger" plain @click="del(scope)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -48,7 +55,7 @@
 <script>
 import { tableOption, pagination } from "./setting";
 import KlEdit from "./widget/edit.vue";
-import { groupList,groupDelete } from "@/api/subscription";
+import { groupList, groupDelete } from "@/api/subscription";
 import moment from "moment";
 export default {
   name: "SubscriptionGroup",
@@ -76,13 +83,12 @@ export default {
   methods: {
     // 搜索
     search() {
-      this.query()
+      this.query();
     },
     // 新增
     add() {
       this.klProps = { ...this.klProps, title: "新增分组" };
       this.$refs.edit.switcher();
-      console.log("新增");
     },
     // 编辑
     edit(scope) {
@@ -92,26 +98,31 @@ export default {
     // 删除
     del(scope) {
       groupDelete(scope.row.id).then(() => {
-        this.query()
-      })
+        this.query();
+      });
     },
     // 改变分页
     sizeChange(val) {
       this.form.pageSize = val;
-      this.query()
+      this.query();
     },
     // 改变页码
     pageNoChange() {
-      this.query()
+      this.query();
     },
     // 排序
-    sortChange(calb){
-      const asc = calb.order === 'ascending' ? true : (calb.order === 'descending' ? false : '')
-      const form = {...this.form}
-      if(typeof asc === 'boolean'){
-        form.sort = {asc: asc, fieldName: calb.column.rawColumnKey}
+    sortChange(calb) {
+      const asc =
+        calb.order === "ascending"
+          ? true
+          : calb.order === "descending"
+          ? false
+          : "";
+      const form = { ...this.form };
+      if (typeof asc === "boolean") {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
       }
-      this.query(form)
+      this.query(form);
     },
     // 查询
     query(form) {
@@ -127,7 +138,7 @@ export default {
         this.tableData = {
           data: res.data.records,
           total: res.data.total,
-        }
+        };
       });
     },
   },

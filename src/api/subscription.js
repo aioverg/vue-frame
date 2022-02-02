@@ -8,6 +8,14 @@ function activityAdd (data) {
     data: data
   })
 }
+// 更新优惠活动
+function activityEdit (data) {
+  return request({
+    url: `/promotion/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
 
 // 优惠活动列表
 function activityList (data) {
@@ -69,13 +77,49 @@ function groupDelete (id) {
   })
 }
 
+// 新增代金券
+function couponAdd (data) {
+  return request({
+    url: '/coupon/',
+    method: 'post',
+    data: data
+  })
+}
+// 更新代金券
+function couponEdit (data) {
+  return request({
+    url: `/coupon/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
+// 代金券列表
+function couponList (data) {
+  return request({
+    url: '/coupon/page',
+    method: 'post',
+    data: data
+  })
+}
+// 删除分组
+function couponDelete (id) {
+  return request({
+    url: `/coupon/${id}`,
+    method: 'delete',
+  })
+}
 export {
   activityAdd,
+  activityEdit,
   activityList,
   activityDelete,
   activityStatus,
   groupAdd,
   groupEdit,
   groupList,
-  groupDelete
+  groupDelete,
+  couponAdd,
+  couponEdit,
+  couponList,
+  couponDelete
 }
