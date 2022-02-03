@@ -71,9 +71,9 @@ const routes = [
         meta: { title: '网络代理', icon: '', noCache: true }
       },
       {
-        path: '/application/rule',
-        component: () => import('@/views/application/rule'),
-        name: 'ApplicationRule',
+        path: '/application/accessStrategy',
+        component: () => import('@/views/application/accessStrategy'),
+        name: 'ApplicationAccessStrategy',
         meta: { title: '访问策略', icon: '', noCache: true }
       },
     ]

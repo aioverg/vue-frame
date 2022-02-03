@@ -86,6 +86,49 @@ function proxyStatus (data) {
   })
 }
 
+// 新增访问策略
+function accessStrategyAdd (data) {
+  return request({
+    url: '/accessStrategy/',
+    method: 'put',
+    data: data
+  })
+}
+// 更新访问策略
+function accessStrategyEdit (data) {
+  return request({
+    url: `/accessStrategy/${data.id}`,
+    method: 'post',
+    data: data
+  })
+}
+
+// 访问策略列表
+function accessStrategyList (data) {
+  return request({
+    url: '/accessStrategy/page',
+    method: 'post',
+    data: data
+  })
+}
+
+// 删除访问策略
+function accessStrategyDelete (id) {
+  return request({
+    url: `/accessStrategy/${id}`,
+    method: 'delete',
+  })
+}
+
+// 访问策略状态
+function accessStrategyStatus (data) {
+  return request({
+    url: `accessStrategy/status/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
+
 export {
   appAdd,
   appEdit,
@@ -97,4 +140,9 @@ export {
   proxyList,
   proxyDelete,
   proxyStatus,
+  accessStrategyAdd,
+  accessStrategyEdit,
+  accessStrategyList,
+  accessStrategyDelete,
+  accessStrategyStatus
 }

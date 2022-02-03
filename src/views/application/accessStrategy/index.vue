@@ -1,6 +1,5 @@
 <template>
-  <div id="application-rule">
-    <h1>访问策略</h1>
+  <div id="application-access-strategy">
     <div class="section-1">
       <el-row align="middle" :gutter="20">
         <el-col :xs="24" :sm="12">
@@ -30,97 +29,141 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :label="item.label"
+          :sortable="item.sortable"
+          :prop="item.key"
         ></el-table-column>
-        <el-table-column width="240" label="操作">
-          <el-button type="primary" plain @click="edit">编辑</el-button>
-          <el-button type="danger" plain @click="del">删除</el-button>
-          <el-button type="warning" plain @click="stop">下架</el-button>
+        <el-table-column width="160" label="操作">
+          <template #default="scope">
+            <el-button type="primary" plain @click="edit(scope)"
+              >编辑</el-button
+            >
+            <el-button type="danger" plain @click="del(scope)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="section-3">
       <el-pagination
-        v-model:currentPage="tableData.current"
-        :page-size="30"
+        v-model:currentPage="form.pageNo"
+        :page-size="form.pageSize"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
         @size-change="sizeChange"
-        @current-change="currentChange"
+        @current-change="pageNoChange"
       ></el-pagination>
     </div>
+    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
   </div>
 </template>
 
 <script>
 import { tableOption, pagination } from "./setting";
+import KlEdit from "./widget/edit.vue";
+import { accessStrategyList, accessStrategyDelete } from "@/api/application";
+import moment from "moment";
 export default {
-  name: "ApplicationRule",
+  name: "ApplicationAccessStrategy",
+  components: { KlEdit },
   data() {
     return {
       form: {
         groupId: "",
         name: "",
-        pageNo: "",
-        pageSize: "",
+        pageNo: 1,
+        pageSize: 10,
         // sort: {},
         status: "",
       },
       tableData: {
-        data: new Array(100).fill(1),
-        current: 2,
-        pages: 0,
-        size: 20,
-        total: 1000,
+        data: [],
+        total: 0,
+      },
+      klProps: {
+        title: "",
       },
     };
   },
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
+      this.query();
     },
     // 新增
     add() {
-      console.log("新增");
+      this.klProps = { ...this.klProps, title: "新增分组" };
+      this.$refs.edit.switcher();
     },
     // 编辑
-    edit() {
-      console.log("编辑");
+    edit(scope) {
+      this.klProps = { ...this.klProps, title: "编辑分组" };
+      this.$refs.edit.switcher(scope.row);
     },
     // 删除
-    del() {
-      console.log("删除");
-    },
-    // 禁用|下架
-    stop() {
-      console.log("禁用下架");
+    del(scope) {
+      accessStrategyDelete(scope.row.id).then(() => {
+        this.query();
+      });
     },
     // 改变分页
     sizeChange(val) {
-      this.tableData.size = val;
-      console.log(`分页${val}`, this.tableData);
+      this.form.pageSize = val;
+      this.query();
     },
     // 改变页码
-    currentChange(val) {
-      console.log(`当前页码: ${val}`, this.tableData);
+    pageNoChange(val) {
+      this.query();
+    },
+    // 排序
+    sortChange(calb) {
+      const asc =
+        calb.order === "ascending"
+          ? true
+          : calb.order === "descending"
+          ? false
+          : "";
+      const form = { ...this.form };
+      if (typeof asc === "boolean") {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+      }
+      this.query(form);
+    },
+    // 查询
+    query(form) {
+      accessStrategyList(form || this.form).then((res) => {
+        res.data.records.forEach((item) => {
+          item.updateDate = moment(item.updateDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+        });
+        this.tableData = {
+          data: res.data.records,
+          total: res.data.total,
+        };
+      });
     },
   },
   created() {
     this.setting = { tableOption, pagination };
+    this.query();
   },
 };
 </script>
 
 <style lang="scss" scoped>
-#application-rule {
+#application-access-strategy {
   width: 100%;
   height: 100%;
   overflow: hidden;
