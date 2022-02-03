@@ -29,39 +29,47 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px">
+      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :label="item.label"
+          :sortable="item.sortable"
+          :prop="item.key"
         ></el-table-column>
         <el-table-column width="240" label="操作">
-          <el-button type="primary" plain @click="edit">编辑</el-button>
-          <el-button type="danger" plain @click="del">删除</el-button>
-          <el-button type="warning" plain @click="stop">下架</el-button>
+          <template #default="scope">
+          <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
+          <el-button type="danger" plain @click="del(scope)">删除</el-button>
+          <el-button type="warning" plain @click="stop(scope)">
+              {{scope.row.status === 'normal' ? '下架' : '上架'}}
+            </el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="section-3">
       <el-pagination
-        v-model:currentPage="tableData.current"
-        :page-size="30"
+        v-model:currentPage="form.pageNo"
+        :page-size="form.pageSize"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
         @size-change="sizeChange"
-        @current-change="currentChange"
+        @current-change="pageNoChange"
       ></el-pagination>
     </div>
-    <kl-edit ref="edit" :title="klProps.title" />
+    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
   </div>
 </template>
 
 <script>
 import { tableOption, pagination } from "./setting";
 import KlEdit from './widget/edit.vue';
+import { subscribeList, subscribeDelete, subscribeStatus } from "@/api/subscription";
+import moment from "moment";
 export default {
   name: "SubscriptionList",
   components: {KlEdit},
@@ -70,8 +78,8 @@ export default {
       form: {
         groupId: "",
         name: "",
-        pageNo: "",
-        pageSize: "",
+        pageNo: 1,
+        pageSize: 10,
         // sort: {},
         status: "",
       },
@@ -79,48 +87,85 @@ export default {
         title: ''
       },
       tableData: {
-        data: new Array(100).fill(1),
-        current: 2,
-        pages: 0,
-        size: 20,
-        total: 1000,
+        data: [],
+        total: 0,
       },
     };
   },
   methods: {
     // 搜索
     search() {
-      consoleEdit.log("搜索");
+      this.query();
     },
     // 新增
     add() {
-      console.log("新增");
+      this.klProps = { ...this.klProps, title: "新增订阅" };
+      this.$refs.edit.switcher();
     },
     // 编辑
-    edit() {
-      this.$refs.edit.switcher()
-      console.log("编辑");
+    edit(scope) {
+      this.klProps = { ...this.klProps, title: "编辑订阅" };
+      this.$refs.edit.switcher(scope.row);
     },
     // 删除
-    del() {
-      console.log("删除");
+    del(scope) {
+      subscribeDelete(scope.row.id).then(() => {
+        this.query();
+      });
     },
     // 禁用|下架
-    stop() {
-      console.log("禁用下架");
+    stop(scope) {
+      subscribeStatus({
+        id:scope.row.id,
+        status: scope.row.status === 'disable' ? 'active' : 'disable'
+      }).then(() => {
+        this.query();
+      })
     },
     // 改变分页
     sizeChange(val) {
-      this.tableData.size = val;
-      console.log(`分页${val}`, this.tableData);
+      form.pageSize = val;
+      this.query();
     },
     // 改变页码
-    currentChange(val) {
-      console.log(`当前页码: ${val}`, this.tableData);
+    pageNoChange() {
+      this.query();
+    },
+    // 排序
+    sortChange(calb) {
+      const asc =
+        calb.order === "ascending"
+          ? true
+          : calb.order === "descending"
+          ? false
+          : "";
+      const form = { ...this.form };
+      if (typeof asc === "boolean") {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+      }
+      this.query(form);
+    },
+    // 查询
+    query(form) {
+      subscribeList(form || this.form).then((res) => {
+        res.data.records.forEach((item) => {
+          item.createDate = moment(item.createDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+          item.updateDate = moment(item.updateDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+        });
+        this.tableData = {
+          data: res.data.records,
+          total: res.data.total,
+        };
+      });
     },
   },
   created() {
     this.setting = { tableOption, pagination };
+    this.query();
   },
 };
 </script>

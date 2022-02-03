@@ -108,6 +108,49 @@ function couponDelete (id) {
     method: 'delete',
   })
 }
+
+
+// 新增订阅
+function subscribeAdd (data) {
+  return request({
+    url: '/subscribe/',
+    method: 'post',
+    data: data
+  })
+}
+// 更新订阅
+function subscribeEdit (data) {
+  return request({
+    url: `/subscribe/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
+// 订阅列表
+function subscribeList (data) {
+  return request({
+    url: '/subscribe/page',
+    method: 'post',
+    data: data
+  })
+}
+// 删除订阅
+function subscribeDelete (id) {
+  return request({
+    url: `/subscribe/${id}`,
+    method: 'delete',
+  })
+}
+
+// 优惠活动状态
+function subscribeStatus (data) {
+  return request({
+    url: `subscribe/status/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
+
 export {
   activityAdd,
   activityEdit,
@@ -121,5 +164,10 @@ export {
   couponAdd,
   couponEdit,
   couponList,
-  couponDelete
+  couponDelete,
+  subscribeAdd,
+  subscribeEdit,
+  subscribeList,
+  subscribeDelete,
+  subscribeStatus
 }
