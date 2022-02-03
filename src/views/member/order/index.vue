@@ -2,7 +2,7 @@
   <div id="subscription-list">
     <div class="section-1">
       <el-row align="middle" :gutter="20">
-        <el-col :xs="24" :sm="17">
+        <el-col :xs="24" :sm="20">
           <el-row :gutter="20">
             <el-col :xs="24" :sm="4">
               <el-input
@@ -36,32 +36,33 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-col :xs="{ span: 24 }" :sm="{ span: 7 }">
+        <el-col :xs="{ span: 24 }" :sm="{ span: 4 }">
           <el-button type="primary" @click="search">搜索</el-button>
-          <el-button type="primary" @click="add">新增</el-button>
         </el-col>
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px">
+      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :label="item.label"
+          :sortable="item.sortable"
+          :prop="item.key"
         ></el-table-column>
       </el-table>
     </div>
     <div class="section-3">
       <el-pagination
-        v-model:currentPage="tableData.current"
-        :page-size="30"
+        v-model:currentPage="form.pageNo"
+        :page-size="form.pageSize"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
         @size-change="sizeChange"
-        @current-change="currentChange"
+        @current-change="pageNoChange"
       ></el-pagination>
     </div>
   </div>
@@ -69,6 +70,8 @@
 
 <script>
 import { tableOption, pagination } from "./setting";
+import { orderList } from "@/api/member";
+import moment from "moment";
 export default {
   name: "SubscriptionList",
   data() {
@@ -81,35 +84,60 @@ export default {
         createDate: "",
       },
       tableData: {
-        data: new Array(100).fill(1),
-        current: 2,
-        pages: 0,
-        size: 20,
-        total: 1000,
+        data: [],
+        total: 0,
       },
     };
   },
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
-    },
-    // 新增
-    add() {
-      console.log("新增");
+      this.query();
     },
     // 改变分页
     sizeChange(val) {
-      this.tableData.size = val;
-      console.log(`分页${val}`, this.tableData);
+      this.form.pageSize = val;
+      this.query();
     },
     // 改变页码
-    currentChange(val) {
-      console.log(`当前页码: ${val}`, this.tableData);
+    pageNoChange(val) {
+      this.query();
+    },
+    // 排序
+    sortChange(calb) {
+      const asc =
+        calb.order === "ascending"
+          ? true
+          : calb.order === "descending"
+          ? false
+          : "";
+      const form = { ...this.form };
+      if (typeof asc === "boolean") {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+      }
+      this.query(form);
+    },
+    // 查询
+    query(form) {
+      orderList(form || this.form).then((res) => {
+        res.data.records.forEach((item) => {
+          item.createDate = moment(item.createDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+          item.updateDate = moment(item.updateDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+        });
+        this.tableData = {
+          data: res.data.records,
+          total: res.data.total,
+        };
+      });
     },
   },
   created() {
     this.setting = { tableOption, pagination };
+    this.query();
   },
 };
 </script>

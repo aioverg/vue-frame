@@ -98,10 +98,10 @@ const routes = [
         meta: { title: '订单管理', icon: '', noCache: true }
       },
       {
-        path: '/member/workOrder',
-        component: () => import('@/views/member/workOrder'),
-        name: 'MemberWorkOrder',
-        meta: { title: '工单管理', icon: '', noCache: true }
+        path: '/member/message',
+        component: () => import('@/views/member/message'),
+        name: 'MemberMessage',
+        meta: { title: '工单消息', icon: '', noCache: true }
       },
       {
         path: '/member/log',
