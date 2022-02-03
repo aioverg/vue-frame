@@ -70,7 +70,7 @@ import KlEdit from "./widget/edit.vue";
 import { messageList } from "@/api/member";
 import moment from "moment";
 export default {
-  name: "MessageList",
+  name: "MemberMessage",
   components: { KlEdit },
   data() {
     return {

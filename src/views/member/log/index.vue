@@ -59,7 +59,7 @@
 <script>
 import { tableOption, pagination } from "./setting";
 export default {
-  name: "SubscriptionList",
+  name: "MemberLog",
   data() {
     return {
       form: {

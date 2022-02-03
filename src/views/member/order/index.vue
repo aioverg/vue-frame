@@ -73,7 +73,7 @@ import { tableOption, pagination } from "./setting";
 import { orderList } from "@/api/member";
 import moment from "moment";
 export default {
-  name: "SubscriptionList",
+  name: "MemberOrder",
   data() {
     return {
       form: {
