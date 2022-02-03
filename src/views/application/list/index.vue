@@ -27,89 +27,145 @@
           </el-row>
         </el-col>
         <el-col :xs="{ span: 24 }" :sm="{ span: 12 }">
-          <el-button type="primary" @click="search">搜索</el-button>
-          <el-button type="primary" @click="add">新增</el-button>
+          <template #default="scope">
+            <el-button type="primary" @click="search(scope)">搜索</el-button>
+            <el-button type="primary" @click="add(scope)">新增</el-button>
+          </template>
         </el-col>
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :label="item.label"
+          :prop="item.key"
+          :sortable="item.sortable"
         ></el-table-column>
         <el-table-column width="160" label="操作">
-          <el-button type="primary" plain @click="edit">编辑</el-button>
-          <el-button type="danger" plain @click="del">删除</el-button>
+          <template #default="scope">
+            <el-button type="primary" plain @click="edit(scope)"
+              >编辑</el-button
+            >
+            <el-button type="danger" plain @click="del(scope)">删除</el-button>
+          </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="section-3">
       <el-pagination
-        v-model:currentPage="tableData.current"
-        :page-size="30"
+        v-model:currentPage="form.pageNo"
+        :page-size="form.pageSize"
         :total="tableData.total"
         :layout="setting.pagination.layout"
         :page-sizes="setting.pagination.pageSizes"
         background
         @size-change="sizeChange"
-        @current-change="currentChange"
+        @current-change="pageNoChange"
       ></el-pagination>
     </div>
+    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
   </div>
 </template>
 
 <script>
 import { tableOption, pagination } from "./setting";
+import KlEdit from "./widget/edit.vue";
+import { appList, appDelete } from "@/api/application";
+import moment from "moment";
 export default {
   name: "ApplicationList",
+  components: { KlEdit },
   data() {
     return {
       form: {
         name: "",
         status: "",
         createDate: "",
+        pageNo: 1,
+        pageSize: 10,
+      },
+      klProps: {
+        title: "",
       },
       tableData: {
-        data: new Array(100).fill(1),
-        current: 2,
-        pages: 0,
-        size: 20,
-        total: 1000,
+        data: [],
+        total: 0,
       },
     };
   },
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
+      this.query();
     },
     // 新增
     add() {
-      console.log("新增");
+      this.klProps = { ...this.klProps, title: "新增应用" };
+      this.$refs.edit.switcher();
     },
     // 编辑
-    edit() {
-      console.log("编辑");
+    edit(scope) {
+      this.klProps = { ...this.klProps, title: "编辑应用" };
+      this.$refs.edit.switcher(scope.row);
     },
     // 删除
-    del() {
-      console.log("删除");
+    del(scope) {
+      appDelete(scope.row.id).then(() => {
+        this.query();
+      });
     },
     // 改变分页
     sizeChange(val) {
-      this.tableData.size = val;
-      console.log(`分页${val}`, this.tableData);
+      this.form.pageSize = val;
+      this.query();
     },
     // 改变页码
-    currentChange(val) {
-      console.log(`当前页码: ${val}`, this.tableData);
+    pageNoChange() {
+      this.query();
+    },
+    // 排序
+    sortChange(calb) {
+      const asc =
+        calb.order === "ascending"
+          ? true
+          : calb.order === "descending"
+          ? false
+          : "";
+      const form = { ...this.form };
+      if (typeof asc === "boolean") {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+      }
+      this.query(form);
+    },
+    // 查询
+    query(form) {
+      appList(form || this.form).then((res) => {
+        res.data.records.forEach((item) => {
+          item.createDate = moment(item.createDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+          item.updateDate = moment(item.updateDate).format(
+            "YYYY-MM-DD hh:mm:ss"
+          );
+        });
+        this.tableData = {
+          data: res.data.records,
+          total: res.data.total,
+        };
+      });
     },
   },
   created() {
     this.setting = { tableOption, pagination };
+    this.query();
   },
 };
 </script>

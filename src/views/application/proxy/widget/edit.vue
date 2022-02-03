@@ -4,6 +4,7 @@
     :title="title"
     width="500px"
     :close-on-click-modal="false"
+    :destroy-on-close="true"
   >
     <div class="form">
       <el-form
@@ -13,34 +14,22 @@
         label-width="80px"
         :disabled="type === 'READ'"
       >
-        <el-form-item label="名字" prop="name">
-          <el-input v-model="form.name" />
+        <el-form-item label="名字" prop="username">
+          <el-input v-model="form.username" />
         </el-form-item>
-        <el-form-item label="价格" prop="currentPrice">
-          <el-input-number
-            v-model="form.currentPrice"
-            :min="0"
-            :controls="false"
-          />
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" />
         </el-form-item>
-        <el-form-item label="原始价格" prop="originalPrice">
-          <el-input-number
-            v-model="form.originalPrice"
-            :min="0"
-            :controls="false"
-          />
+        <el-form-item label="地址" prop="host">
+          <el-input v-model="form.host" />
         </el-form-item>
-        <el-form-item label="分组" prop="groupId">
-          <el-select v-model="form.groupId" placeholder="请选择">
-            <el-option label="label" value="value"></el-option>
-          </el-select>
+        <el-form-item label="端口" prop="port">
+          <el-input v-model="form.port" />
         </el-form-item>
-        <el-form-item label="优惠活动" prop="promotionId">
-          <el-select v-model="form.promotionId" placeholder="请选择">
-            <el-option label="label" value="value"></el-option>
-          </el-select>
+        <el-form-item label="协议" prop="protocol">
+          <el-input v-model="form.protocol" />
         </el-form-item>
-        <el-form-item label="简介" prop="remark">
+        <!-- <el-form-item label="备注" prop="remark">
           <el-input
             v-model="form.remark"
             type="textarea"
@@ -48,7 +37,13 @@
             show-word-limit
             :maxlength="300"
           />
-        </el-form-item>
+        </el-form-item> -->
+
+        <!-- <el-form-item label="选择" prop="numText">
+          <el-select v-model="form.select" placeholder="Select">
+            <el-option label="label" value="value"></el-option>
+          </el-select>
+        </el-form-item> -->
       </el-form>
     </div>
     <template #footer v-if="showFooter">
@@ -62,7 +57,7 @@
   </el-dialog>
 </template>
 <script>
-import { subscribeAdd, subscribeEdit } from "@/api/subscription";
+import { proxyAdd, proxyEdit } from "@/api/application";
 export default {
   name: "SubscriptionEdit",
   props: {
@@ -78,22 +73,26 @@ export default {
     return {
       visible: false,
       form: {
-        name: "",
-        currentPrice: 0,
-        originalPrice: 0,
-        groupId: "",
-        promotionId: "",
-        remark: "",
+        username: "",
+        password: "",
+        host: "",
+        port: "",
+        protocol: "",
       },
     };
   },
   created() {
     this.noRender = {
       rules: {
-        name: [{ required: true, trigger: ["change"], message: "不能为空" }],
-        currentPrice: [
+        username: [
           { required: true, trigger: ["change"], message: "不能为空" },
         ],
+        password: [
+          { required: true, trigger: ["change"], message: "不能为空" },
+        ],
+        host: [{ required: true, trigger: ["change"], message: "不能为空" }],
+        port: [{ required: true, trigger: ["change"], message: "不能为空" }],
+        protocol: [{ required: true, trigger: ["change"], message: "不能为空" }],
       },
     };
   },
@@ -107,17 +106,19 @@ export default {
       if (data) {
         this.form = {
           id: data.id,
-          name: data.name,
-          remark: data.remark,
+          username: data.username,
+          password:  data.password,
+          host:  data.host,
+          port:  data.port,
+          protocol:  data.protocol,
         };
       } else {
         this.form = {
-          name: "",
-          currentPrice: 0,
-          originalPrice: 0,
-          groupId: "",
-          promotionId: "",
-          remark: "",
+          username: "",
+          password: "",
+          host: "",
+          port: "",
+          protocol: "",
         };
       }
       this.visible = !this.visible;
@@ -126,12 +127,12 @@ export default {
     confirm() {
       this.$refs.formRef.validate().then(() => {
         if (this.form.hasOwnProperty("id")) {
-          subscribeEdit(this.form).then(() => {
+          proxyEdit(this.form).then(() => {
             this.switcher();
             this.refresh();
           });
         } else {
-          subscribeAdd(this.form).then(() => {
+          proxyAdd(this.form).then(() => {
             this.switcher();
             this.refresh();
           });

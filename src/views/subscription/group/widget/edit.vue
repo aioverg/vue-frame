@@ -69,6 +69,10 @@ export default {
   methods: {
     // 开始关闭弹窗
     switcher(data) {
+      if(this.visible){
+        this.visible = !this.visible;
+        return
+      }
       if (data) {
         this.form = {
           id: data.id,

@@ -65,9 +65,9 @@ const routes = [
         meta: { title: '应用列表', icon: '', noCache: true }
       },
       {
-        path: '/application/network',
-        component: () => import('@/views/application/network'),
-        name: 'ApplicationNetwork',
+        path: '/application/proxy',
+        component: () => import('@/views/application/proxy'),
+        name: 'ApplicationProxy',
         meta: { title: '网络代理', icon: '', noCache: true }
       },
       {

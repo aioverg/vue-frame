@@ -87,6 +87,10 @@ export default {
   methods: {
     // 开启关闭弹窗
     switcher(data) {
+      if(this.visible){
+        this.visible = !this.visible;
+        return
+      }
       if (data) {
         const rule = JSON.parse(data.rule);
         this.form = {
