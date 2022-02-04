@@ -92,7 +92,7 @@ export default {
         beginDate: "",
         endDate: "",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: 5,
         // sort:{
         //   asc: false,
         //   fieldName: "",

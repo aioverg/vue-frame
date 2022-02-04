@@ -1,6 +1,7 @@
 const pagination = {
   layout: "prev, pager, next,sizes, total",
-  pageSizes: [10, 20, 30, 40, 50],
+  pageSizes: [15, 30, 50, 100],
+  pageSize: 15,
 }
 
 export {

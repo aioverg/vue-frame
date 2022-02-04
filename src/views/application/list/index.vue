@@ -90,7 +90,7 @@ export default {
         status: "",
         createDate: "",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: pagination.pageSize,
       },
       klProps: {
         title: "",

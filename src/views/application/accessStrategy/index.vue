@@ -83,7 +83,7 @@ export default {
         groupId: "",
         name: "",
         pageNo: 1,
-        pageSize: 10,
+        pageSize: pagination.pageSize,
         // sort: {},
         status: "",
       },
