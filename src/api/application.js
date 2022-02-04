@@ -23,7 +23,7 @@ function appList (data) {
     url: '/app/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 
 // 删除应用
@@ -66,7 +66,7 @@ function proxyList (data) {
     url: '/proxy/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 
 // 删除网络代理
@@ -109,7 +109,7 @@ function accessStrategyList (data) {
     url: '/accessStrategy/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 
 // 删除访问策略

@@ -23,7 +23,7 @@ function userList (data) {
     url: '/user/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 
 // 删除用户
@@ -40,7 +40,7 @@ function orderList (data) {
     url: '/order/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 
 // 消息列表
@@ -57,7 +57,7 @@ function messageReplay (data) {
     url: `/message/replay`,
     method: 'put',
     data: data
-  })
+  }, false)
 }
 
 // 发送消息

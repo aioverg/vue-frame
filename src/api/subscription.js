@@ -23,7 +23,7 @@ function activityList (data) {
     url: '/promotion/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 
 // 删除优惠活动
@@ -67,7 +67,7 @@ function groupList (data) {
     url: '/subscribeGroup/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 // 删除分组
 function groupDelete (id) {
@@ -99,7 +99,7 @@ function couponList (data) {
     url: '/coupon/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 // 删除分组
 function couponDelete (id) {
@@ -132,7 +132,7 @@ function subscribeList (data) {
     url: '/subscribe/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 // 删除订阅
 function subscribeDelete (id) {
