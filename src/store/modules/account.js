@@ -1,5 +1,5 @@
 import { login as loginApi } from '@/api/user'
-import { setToken } from '@/utils/auth'
+import { setToken,removeToken } from '@/utils/auth'
 const state = {
   token: '',
   userInfo: {},
@@ -18,7 +18,6 @@ const actions = {
   login ({ commit }, userInfo) {
     return new Promise((resolve, reject) => {
       loginApi(userInfo).then(res => {
-        debugger
         commit('SET_TOKEN', res.data.token)
         setToken(res.data.token)
         resolve()
@@ -32,8 +31,10 @@ const actions = {
   getInfo () {
 
   },
-  logout () {
-
+  logout ({commit}) {
+    commit('SET_TOKEN', '')
+    removeToken()
+    location.reload()
   }
 }
 export default {

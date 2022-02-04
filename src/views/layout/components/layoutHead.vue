@@ -1,6 +1,6 @@
 <template>
   <div id="layout-head">
-    <el-button type="text" style="margin-left: 20px">退出</el-button>
+    <el-button type="text" style="margin-left: 20px" @click="logout()">退出</el-button>
     <el-avatar :size="30" src="https://empty" @error="errorHandler">
       <kl-icon icon-name="icon-avatar" />
     </el-avatar>
@@ -11,9 +11,11 @@
 <script>
 export default {
   name: "LayoutHead",
-  data() {
-    return {};
-  },
+  methods: {
+    logout() {
+      this.$store.dispatch('account/logout')
+    }
+  }
 };
 </script>
 
