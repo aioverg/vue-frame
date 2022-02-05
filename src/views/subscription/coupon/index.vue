@@ -49,8 +49,8 @@
           </el-row>
         </el-col>
         <el-col :xs="{ span: 24 }" :sm="{ span: 10 }">
-          <el-button type="primary" @click="search">搜索</el-button>
-          <el-button type="primary" @click="add">新增</el-button>
+          <el-button type="primary" @click="search()">搜索</el-button>
+          <el-button type="primary" @click="add()">新增</el-button>
         </el-col>
       </el-row>
     </div>
@@ -130,16 +130,12 @@ export default {
   methods: {
     // 搜索
     search() {
-      console.log("搜索");
+      this.query();
     },
     // 新增
     add() {
       this.klProps = { ...this.klProps, title: "新增代金券" };
       this.$refs.edit.switcher();
-    },
-    // 批量新增
-    batchAdd() {
-      console.log("批量新增");
     },
     // 编辑
     edit(scope) {
@@ -179,6 +175,12 @@ export default {
     query(form) {
       couponList(form || this.form).then((res) => {
         res.data.records.forEach((item) => {
+          const aim = setting.status.find(item1 => item1.key === item.status)
+          if(aim){
+            item.statusName = aim.label
+          }else{
+            item.statusName = item.status
+          }
           item.createDate = moment(item.createDate).format(
             "YYYY-MM-DD hh:mm:ss"
           );
