@@ -14,7 +14,7 @@
         label-width="80px"
         :disabled="type === 'READ'"
       >
-        <el-form-item label="活动名称" prop="text">
+        <el-form-item label="活动名称" prop="name">
           <el-input v-model="form.name" placeholder="活动名称" />
         </el-form-item>
         <el-form-item label="活动规则" prop="number">
@@ -52,7 +52,7 @@
   </el-dialog>
 </template>
 <script>
-import { activityAdd,activityEdit } from "@/api/subscription";
+import { activityAdd, activityEdit } from "@/api/subscription";
 export default {
   name: "SubscriptionEdit",
   props: {
@@ -87,9 +87,9 @@ export default {
   methods: {
     // 开启关闭弹窗
     switcher(data) {
-      if(this.visible){
+      if (this.visible) {
         this.visible = !this.visible;
-        return
+        return;
       }
       if (data) {
         const rule = JSON.parse(data.rule);
@@ -119,7 +119,7 @@ export default {
       this.$refs.formRef
         .validate()
         .then(() => {
-          this.form.rule = `${this.form._full} - ${this.form._reduce}`;
+          this.form.rule = { full: this.form._full, reduce: this.form._reduce };
           if (this.form.hasOwnProperty("id")) {
             activityEdit(this.form).then(() => {
               this.switcher();

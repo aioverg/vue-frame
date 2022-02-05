@@ -34,8 +34,8 @@
           </el-date-picker>
         </el-form-item>
         <el-form-item label="订阅服务" prop="sub_">
-          <el-select v-model="form.sub_" placeholder="Select">
-            <el-option label="label" value="value"></el-option>
+          <el-select v-model="form.sub_" placeholder="请选择">
+            <el-option v-for="item in subscribeList" :key="item.id" :label="item.name" :value="item.id"></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
@@ -72,6 +72,7 @@ export default {
     showCancel: { type: Boolean, default: true }, // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
     refresh: { type: Function, default: () => {} }, // 刷新函数
+    subscribeList: {type: Array, default: []}
   },
   data() {
     return {
@@ -79,7 +80,7 @@ export default {
       form: {
         name: "",
         number: 1,
-        price: 101,
+        price: 0,
         select: "value",
         beginDate: "",
         endDate: "",
@@ -123,7 +124,7 @@ export default {
         this.form = {
           name: "",
           number: 1,
-          price: 101,
+          price: 0,
           select: "value",
           beginDate: "",
           endDate: "",

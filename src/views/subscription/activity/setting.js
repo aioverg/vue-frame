@@ -8,7 +8,18 @@ const tableOption = [
   { key: 'updateDate', label: '更新时间', width: '' , sortable: true},
 ]
 
-export {
-  tableOption,
-  pagination
+const status = [
+  {key: 'active', label: '启用'},
+  {key: 'disable', label: '禁用'}
+]
+
+const type = [
+  {key: 'full_sale', label: '满减'},
+]
+
+export default {
+  tableOption: tableOption,
+  pagination: tableOption,
+  status: status,
+  type: type,
 }

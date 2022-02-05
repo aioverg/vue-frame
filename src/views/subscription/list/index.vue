@@ -8,16 +8,38 @@
               <el-input
                 v-model="form.name"
                 placeholder="请输入服务名"
+                @blur="query()"
               ></el-input>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.status" placeholder="请选择状态">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.status"
+                placeholder="请选择状态"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in setting.status"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.groupId" placeholder="请选择分组">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.groupId"
+                placeholder="请选择分组"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  clearable
+                  v-for="item in groupList"
+                  :label="item.name"
+                  :value="item.id"
+                  :key="item.id"
+                ></el-option>
               </el-select>
             </el-col>
           </el-row>
@@ -29,7 +51,12 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
@@ -40,10 +67,12 @@
         ></el-table-column>
         <el-table-column width="240" label="操作">
           <template #default="scope">
-          <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
-          <el-button type="danger" plain @click="del(scope)">删除</el-button>
-          <el-button type="warning" plain @click="stop(scope)">
-              {{scope.row.status === 'normal' ? '下架' : '上架'}}
+            <el-button type="primary" plain @click="edit(scope)"
+              >编辑</el-button
+            >
+            <el-button type="danger" plain @click="del(scope)">删除</el-button>
+            <el-button type="warning" plain @click="stop(scope)">
+              {{ scope.row.status === "active" ? "下架" : "上架" }}
             </el-button>
           </template>
         </el-table-column>
@@ -61,34 +90,48 @@
         @current-change="pageNoChange"
       ></el-pagination>
     </div>
-    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
+    <kl-edit
+      ref="edit"
+      :title="klProps.title"
+      :refresh="query"
+      :groupList="groupList"
+      :activityList="activityList"
+    />
   </div>
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
-import KlEdit from './widget/edit.vue';
-import { subscribeList, subscribeDelete, subscribeStatus } from "@/api/subscription";
+import setting from "./setting";
+import KlEdit from "./widget/edit.vue";
+import {
+  subscribeList,
+  subscribeDelete,
+  subscribeStatus,
+  groupList,
+  activityList,
+} from "@/api/subscription";
 import moment from "moment";
 export default {
   name: "SubscriptionList",
-  components: {KlEdit},
+  components: { KlEdit },
   data() {
     return {
       form: {
         groupId: "",
         name: "",
         pageNo: 1,
-        pageSize: pagination.pageSize,
+        pageSize: setting.pagination.pageSize,
         // sort: {},
         status: "",
       },
-      klProps: {
-        title: ''
-      },
+      groupList: [],
+      activityList: [],
       tableData: {
         data: [],
         total: 0,
+      },
+      klProps: {
+        title: "",
       },
     };
   },
@@ -116,11 +159,11 @@ export default {
     // 禁用|下架
     stop(scope) {
       subscribeStatus({
-        id:scope.row.id,
-        status: scope.row.status === 'disable' ? 'active' : 'disable'
+        id: scope.row.id,
+        status: scope.row.status === "disable" ? "active" : "disable",
       }).then(() => {
         this.query();
-      })
+      });
     },
     // 改变分页
     sizeChange(val) {
@@ -164,7 +207,19 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
+    groupList({
+      pageNo: 1,
+      pageSize: 1000,
+    }).then((res) => {
+      this.groupList = res.data.records;
+    });
+    activityList({
+      pageNo: 1,
+      pageSize: 1000,
+    }).then((res) => {
+      this.activityList = res.data.records;
+    });
     this.query();
   },
 };

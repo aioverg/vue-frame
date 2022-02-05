@@ -2,17 +2,28 @@
   <div id="subscription-coupon">
     <div class="section-1">
       <el-row align="middle" :gutter="20">
-        <el-col :xs="24" :sm="12">
+        <el-col :xs="24" :sm="14">
           <el-row :gutter="20">
             <el-col :xs="24" :sm="6">
               <el-input
                 v-model="form.name"
                 placeholder="请输入代金券名称"
+                @blur="query()"
               ></el-input>
             </el-col>
             <el-col :xs="24" :sm="6">
-              <el-select v-model="form.status" placeholder="请选择状态">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.status"
+                placeholder="请选择状态"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in setting.status"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="6">
@@ -21,6 +32,7 @@
                 type="date"
                 placeholder="核销时间"
                 style="width: 100%"
+                @change="query()"
               >
               </el-date-picker>
             </el-col>
@@ -30,20 +42,25 @@
                 type="date"
                 placeholder="出售时间"
                 style="width: 100%"
+                @change="query()"
               >
               </el-date-picker>
             </el-col>
           </el-row>
         </el-col>
-        <el-col :xs="{ span: 24 }" :sm="{ span: 12 }">
+        <el-col :xs="{ span: 24 }" :sm="{ span: 10 }">
           <el-button type="primary" @click="search">搜索</el-button>
           <el-button type="primary" @click="add">新增</el-button>
-          <el-button type="primary" @click="batchAdd">批量新增</el-button>
         </el-col>
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
@@ -54,7 +71,9 @@
         ></el-table-column>
         <el-table-column width="160" label="操作">
           <template #default="scope">
-            <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
+            <el-button type="primary" plain @click="edit(scope)"
+              >编辑</el-button
+            >
             <el-button type="danger" plain @click="del(scope)">删除</el-button>
           </template>
         </el-table-column>
@@ -72,14 +91,14 @@
         @current-change="pageNoChange"
       ></el-pagination>
     </div>
-    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
+    <kl-edit ref="edit" :title="klProps.title" :refresh="query" :subscribeList="subscribeList" />
   </div>
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
+import setting from "./setting";
 import KlEdit from "./widget/edit.vue";
-import { couponList, couponDelete } from "@/api/subscription";
+import { couponList, couponDelete, subscribeList } from "@/api/subscription";
 import moment from "moment";
 export default {
   name: "SubscriptionCoupon",
@@ -92,12 +111,13 @@ export default {
         beginDate: "",
         endDate: "",
         pageNo: 1,
-        pageSize: 5,
+        pageSize: setting.pagination.pageSize,
         // sort:{
         //   asc: false,
         //   fieldName: "",
         // },
       },
+      subscribeList: [],
       tableData: {
         data: [],
         total: 0,
@@ -173,7 +193,13 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
+    subscribeList({
+      pageNo: 1,
+      pageSize: 1000,
+    }).then((res) => {
+      this.subscribeList = res.data.records;
+    });
     this.query();
   },
 };

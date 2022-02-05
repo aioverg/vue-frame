@@ -10,7 +10,17 @@ const tableOption = [
   { key: 'endDate', label: '核销时间', width: '', sortable: true },
 ]
 
-export {
-  tableOption,
-  pagination
+const status = [
+  {key: 'active', label: '激活'},
+  {key: 'disable', label: '禁用'},
+  {key: 'in_stock', label: '入库'},
+  {key: 'sold', label: '已售'},
+  {key: 'checked_off', label: '已核销'},
+  {key: 'nullify', label: '作废'},
+]
+
+export default {
+  tableOption: tableOption,
+  pagination: pagination,
+  status: status,
 }

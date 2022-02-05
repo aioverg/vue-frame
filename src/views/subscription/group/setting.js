@@ -7,7 +7,7 @@ const tableOption = [
   { key: 'updateDate', label: '更新时间', width: '', sortable: true },
 ]
 
-export {
-  tableOption,
-  pagination
+export default {
+  tableOption: tableOption,
+  pagination: pagination,
 }

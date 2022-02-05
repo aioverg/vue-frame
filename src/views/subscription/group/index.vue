@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
+import setting from "./setting";
 import KlEdit from "./widget/edit.vue";
 import { groupList, groupDelete } from "@/api/subscription";
 import moment from "moment";
@@ -65,7 +65,7 @@ export default {
       form: {
         name: "",
         pageNo: 1,
-        pageSize: pagination.pageSize,
+        pageSize: setting.pagination.pageSize,
         // sort:{
         //   asc: false,
         //   fieldName: "",
@@ -143,7 +143,7 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
     this.query();
   },
 };

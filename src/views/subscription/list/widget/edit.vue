@@ -32,12 +32,24 @@
         </el-form-item>
         <el-form-item label="分组" prop="groupId">
           <el-select v-model="form.groupId" placeholder="请选择">
-            <el-option label="label" value="value"></el-option>
+            <el-option
+              clearable
+              v-for="item in groupList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="优惠活动" prop="promotionId">
           <el-select v-model="form.promotionId" placeholder="请选择">
-            <el-option label="label" value="value"></el-option>
+            <el-option
+              clearable
+              v-for="item in activityList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="简介" prop="remark">
@@ -73,6 +85,8 @@ export default {
     showCancel: { type: Boolean, default: true }, // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
     refresh: { type: Function, default: () => {} }, // 刷新函数
+    groupList: { type: Array, default: [] }, // 分组
+    activityList: { type: Array, default: [] }, // 优惠活动
   },
   data() {
     return {
@@ -100,9 +114,9 @@ export default {
   methods: {
     // 开始关闭弹窗
     switcher(data) {
-      if(this.visible){
+      if (this.visible) {
         this.visible = !this.visible;
-        return
+        return;
       }
       if (data) {
         this.form = {

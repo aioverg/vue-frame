@@ -11,13 +11,33 @@
               ></el-input>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.status" placeholder="请选择活动类型">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.type"
+                placeholder="请选择活动类型"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in setting.type"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.status" placeholder="请选择活动状态">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.status"
+                placeholder="请选择活动状态"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in setting.status"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
           </el-row>
@@ -29,7 +49,12 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
@@ -40,10 +65,12 @@
         ></el-table-column>
         <el-table-column width="240" label="操作">
           <template #default="scope">
-            <el-button type="primary" plain @click="edit(scope)">编辑</el-button>
+            <el-button type="primary" plain @click="edit(scope)"
+              >编辑</el-button
+            >
             <el-button type="danger" plain @click="del(scope)">删除</el-button>
             <el-button type="warning" plain @click="stop(scope)">
-              {{scope.row.status === 'disable' ? '启用' : '禁用'}}
+              {{ scope.row.status === "disable" ? "启用" : "禁用" }}
             </el-button>
           </template>
         </el-table-column>
@@ -66,9 +93,13 @@
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
+import setting from "./setting";
 import KlEdit from "./widget/edit.vue";
-import { activityList,activityDelete,activityStatus } from "@/api/subscription";
+import {
+  activityList,
+  activityDelete,
+  activityStatus,
+} from "@/api/subscription";
 import moment from "moment";
 export default {
   name: "SubscriptionActivity",
@@ -78,9 +109,10 @@ export default {
       form: {
         name: "", // 名称
         pageNo: 1,
-        pageSize: 20,
+        pageSize: setting.pagination.pageSize,
         // sort: {},
         status: "",
+        type: "",
       },
       klProps: {
         title: "",
@@ -94,7 +126,7 @@ export default {
   methods: {
     // 搜索
     search() {
-      this.query()
+      this.query();
     },
     // 新增
     add() {
@@ -109,17 +141,17 @@ export default {
     // 删除
     del(scope) {
       activityDelete(scope.row.id).then(() => {
-        this.query()
-      })
+        this.query();
+      });
     },
     // 禁用|下架
     stop(scope) {
       activityStatus({
-        id:scope.row.id,
-        status: scope.row.status === 'disable' ? 'active' : 'disable'
+        id: scope.row.id,
+        status: scope.row.status === "disable" ? "active" : "disable",
       }).then(() => {
         this.query();
-      })
+      });
     },
     // 改变分页
     sizeChange(val) {
@@ -131,13 +163,18 @@ export default {
       this.query();
     },
     // 排序
-    sortChange(calb){
-      const asc = calb.order === 'ascending' ? true : (calb.order === 'descending' ? false : '')
-      const form = {...this.form}
-      if(typeof asc === 'boolean'){
-        form.sort = {asc: asc, fieldName: calb.column.rawColumnKey}
+    sortChange(calb) {
+      const asc =
+        calb.order === "ascending"
+          ? true
+          : calb.order === "descending"
+          ? false
+          : "";
+      const form = { ...this.form };
+      if (typeof asc === "boolean") {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
       }
-      this.query(form)
+      this.query(form);
     },
     // 查询
     query(form) {
@@ -158,7 +195,7 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
     this.query();
   },
 };
