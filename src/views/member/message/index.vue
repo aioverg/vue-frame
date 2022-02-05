@@ -8,11 +8,22 @@
               <el-input
                 v-model="form.name"
                 placeholder="请输入用户名"
+                @blur="query()"
               ></el-input>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.status" placeholder="请选择状态">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.status"
+                placeholder="请选择状态"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in setting.status"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="8">
@@ -21,6 +32,7 @@
                 type="date"
                 placeholder="请选择创建时间"
                 style="width: 100%"
+                @change="query()"
               >
               </el-date-picker>
             </el-col>
@@ -32,7 +44,12 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
@@ -41,9 +58,14 @@
           :sortable="item.sortable"
           :prop="item.key"
         ></el-table-column>
-        <el-table-column width="120" label="操作">
+        <el-table-column width="160" label="操作">
           <template #default="scope">
-          <el-button type="primary" plain @click="details(scope)">详情</el-button>
+            <el-button type="primary" plain @click="details(scope)"
+              >详情</el-button
+            >
+            <el-button type="primary" plain @click="details(reply)"
+              >回复</el-button
+            >
           </template>
         </el-table-column>
       </el-table>
@@ -65,7 +87,7 @@
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
+import setting from "./setting";
 import KlEdit from "./widget/edit.vue";
 import { messageList } from "@/api/member";
 import moment from "moment";
@@ -79,7 +101,7 @@ export default {
         status: "",
         createDate: "",
         pageNo: 1,
-        pageSize: pagination.pageSize,
+        pageSize: setting.pagination.pageSize,
       },
       tableData: {
         data: [],
@@ -97,6 +119,11 @@ export default {
     },
     // 详情
     details(scope) {
+      this.klProps = { ...this.klProps, title: "消息详情" };
+      this.$refs.edit.switcher(scope.row);
+    },
+    // 详情
+    reply(scope) {
       this.klProps = { ...this.klProps, title: "消息详情" };
       this.$refs.edit.switcher(scope.row);
     },
@@ -142,7 +169,7 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
     this.query();
   },
 };

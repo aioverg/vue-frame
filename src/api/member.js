@@ -49,7 +49,7 @@ function messageList (data) {
     url: '/message/page',
     method: 'post',
     data: data
-  })
+  }, false)
 }
 // 回复消息
 function messageReplay (data) {

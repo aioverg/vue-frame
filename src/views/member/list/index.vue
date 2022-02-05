@@ -6,13 +6,20 @@
           <el-row :gutter="20">
             <el-col :xs="24" :sm="8">
               <el-input
-                v-model="form.name"
+                v-model="form.keywords"
                 placeholder="请输入用户名"
+                @blur="query()"
               ></el-input>
             </el-col>
             <el-col :xs="24" :sm="8">
-              <el-select v-model="form.status" placeholder="请选择状态">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select v-model="form.status" placeholder="请选择状态" clearable
+                @change="query()">
+                <el-option
+                  v-for="item in setting.status"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="8">
@@ -21,6 +28,7 @@
                 type="date"
                 placeholder="请选择注册时间"
                 style="width: 100%"
+                @change="query()"
               >
               </el-date-picker>
             </el-col>
@@ -67,7 +75,7 @@
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
+import setting from "./setting";
 import KlEdit from "./widget/edit.vue";
 import { userList, userDelete } from "@/api/member";
 import moment from "moment";
@@ -77,11 +85,11 @@ export default {
   data() {
     return {
       form: {
-        name: "",
+        keywords: "",
         status: "",
         createDate: "",
         pageNo: 1,
-        pageSize: pagination.pageSize,
+        pageSize: setting.pagination.pageSize,
       },
       tableData: {
         data: [],
@@ -140,6 +148,12 @@ export default {
     query(form) {
       userList(form || this.form).then((res) => {
         res.data.records.forEach((item) => {
+          const aim = setting.status.find(item1 => item1.key === item.status)
+          if(aim){
+            item.statusName = aim.label
+          }else{
+            item.statusName = item.status
+          }
           item.createDate = moment(item.createDate).format(
             "YYYY-MM-DD hh:mm:ss"
           );
@@ -155,7 +169,7 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
     this.query();
   },
 };

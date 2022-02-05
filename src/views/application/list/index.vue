@@ -83,14 +83,22 @@
         @current-change="pageNoChange"
       ></el-pagination>
     </div>
-    <kl-edit ref="edit" :title="klProps.title" :refresh="query" />
+    <kl-edit
+      ref="edit"
+      :title="klProps.title"
+      :refresh="query"
+      :statusList="setting.status"
+      :subscribeList="subscribeList"
+      :proxyList="proxyList"
+    />
   </div>
 </template>
 
 <script>
 import setting from "./setting";
 import KlEdit from "./widget/edit.vue";
-import { appList, appDelete } from "@/api/application";
+import { appList, appDelete, proxyList } from "@/api/application";
+import {subscribeList} from "@/api/subscription";
 import moment from "moment";
 export default {
   name: "ApplicationList",
@@ -107,6 +115,8 @@ export default {
       klProps: {
         title: "",
       },
+      proxyList: [],
+      subscribeList: [],
       tableData: {
         data: [],
         total: 0,
@@ -183,6 +193,18 @@ export default {
   },
   created() {
     this.setting = setting;
+    subscribeList({
+      pageNo: 1,
+      pageSize: 1000,
+    }).then((res) => {
+      this.subscribeList = res.data.records;
+    });
+    proxyList({
+      pageNo: 1,
+      pageSize: 1000,
+    }).then((res) => {
+      this.proxyList = res.data.records;
+    });
     this.query();
   },
 };

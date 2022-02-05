@@ -5,8 +5,12 @@ const tableOption = [
   { key: 'createDate', label: '创建时间', width: '', sortable: true },
   { key: 'status', label: '状态', width: '', sortable: true },
 ]
-
-export {
-  tableOption,
-  pagination
+const status = [
+  {key: 'unread', label: '未读'},
+  {key: 'read', label: '已读'},
+]
+export default {
+  tableOption: tableOption,
+  pagination: pagination,
+  status: status
 }

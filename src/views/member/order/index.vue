@@ -8,20 +8,46 @@
               <el-input
                 v-model="form.name"
                 placeholder="请输入用户名"
+                @blur="query()"
               ></el-input>
             </el-col>
             <el-col :xs="24" :sm="5">
-              <el-select v-model="form.serve" placeholder="请选择订阅服务">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.serve"
+                placeholder="请选择订阅服务"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in subscribeList"
+                  :label="item.name"
+                  :value="item.id"
+                  :key="item.id"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="5">
-              <el-select v-model="form.status" placeholder="请选择订单状态">
-                <!-- <el-option v-for="" :key=""></el-option> -->
+              <el-select
+                v-model="form.status"
+                placeholder="请选择订单状态"
+                clearable
+                @change="query()"
+              >
+                <el-option
+                  v-for="item in setting.status"
+                  :label="item.label"
+                  :value="item.key"
+                  :key="item.key"
+                ></el-option>
               </el-select>
             </el-col>
             <el-col :xs="24" :sm="5">
-              <el-select v-model="form.time" placeholder="请选择订阅时长">
+              <el-select
+                v-model="form.time"
+                placeholder="请选择订阅时长"
+                clearable
+                @change="query()"
+              >
                 <!-- <el-option v-for="" :key=""></el-option> -->
               </el-select>
             </el-col>
@@ -31,6 +57,7 @@
                 type="date"
                 placeholder="请选择创建时间"
                 style="width: 100%"
+                @change="query()"
               >
               </el-date-picker>
             </el-col>
@@ -42,7 +69,12 @@
       </el-row>
     </div>
     <div class="section-2">
-      <el-table :data="tableData.data" stripe height="px" @sort-change="sortChange">
+      <el-table
+        :data="tableData.data"
+        stripe
+        height="px"
+        @sort-change="sortChange"
+      >
         <el-table-column type="index" width="80" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
@@ -69,8 +101,9 @@
 </template>
 
 <script>
-import { tableOption, pagination } from "./setting";
+import setting from "./setting";
 import { orderList } from "@/api/member";
+import { subscribeList } from "@/api/subscription";
 import moment from "moment";
 export default {
   name: "MemberOrder",
@@ -82,7 +115,10 @@ export default {
         serve: "",
         time: "",
         createDate: "",
+        pageNo: 1,
+        pageSize: setting.pagination.pageSize,
       },
+      subscribeList: [],
       tableData: {
         data: [],
         total: 0,
@@ -136,7 +172,13 @@ export default {
     },
   },
   created() {
-    this.setting = { tableOption, pagination };
+    this.setting = setting;
+    subscribeList({
+      pageNo: 1,
+      pageSize: 1000,
+    }).then((res) => {
+      this.subscribeList = res.data.records;
+    });
     this.query();
   },
 };

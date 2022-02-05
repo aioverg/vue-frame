@@ -1,90 +1,209 @@
 <template>
-  <el-dialog v-model="visible" :title="title" width="500px" :close-on-click-modal="false">
+  <el-dialog
+    v-model="visible"
+    :title="title"
+    width="500px"
+    :close-on-click-modal="false"
+  >
     <div class="form">
       <el-form
         ref="formRef"
         :model="form"
         :rules="noRender.rules"
-        label-width="80px"
+        label-width="100px"
         :disabled="type === 'READ'"
       >
-        <el-form-item label="文本" prop="text">
-          <el-input v-model="form.text" />
+        <el-form-item label="名字" prop="name">
+          <el-input v-model="form.name" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="数字" prop="number">
-          <el-input-number v-model="form.number" :min="0" :controls="type !== 'READ'" />
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="form.username" placeholder="请输入" />
         </el-form-item>
-        <el-form-item label="多行文本" prop="numText">
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="form.password" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="订阅" prop="subscribeId">
+          <el-select v-model="form.subscribeId" placeholder="请选择">
+            <el-option
+              clearable
+              v-for="item in subscribeList"
+              :label="item.name"
+              :value="item.id"
+              :key="item.id"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="访问URL" prop="url">
+          <el-input v-model="form.url" placeholder="请输入" />
+        </el-form-item>
+        <el-form-item label="状态" prop="status">
+          <el-select v-model="form.status" placeholder="请选择">
+            <el-option
+              clearable
+              v-for="item in statusList"
+              :label="item.label"
+              :value="item.key"
+              :key="item.key"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="代理" prop="userAgent">
+          <el-select v-model="form.userAgent" placeholder="请选择">
+            <!-- <el-option
+              clearable
+              v-for="item in proxyList"
+              :label="item.username"
+              :value="item.id"
+              :key="item.id"
+            ></el-option> -->
+          </el-select>
+        </el-form-item>
+        <el-form-item label="浏览器高度" prop="height">
+          <el-input-number
+            v-model="form.height"
+            :min="0"
+            :controls="type !== 'READ'"
+          />
+        </el-form-item>
+        <el-form-item label="浏览器宽度" prop="width">
+          <el-input-number
+            v-model="form.width"
+            :min="0"
+            :controls="type !== 'READ'"
+          />
+        </el-form-item>
+        <el-form-item label="语言" prop="language">
+          <el-select v-model="form.language" placeholder="请选择">
+            <!-- <el-option label="label" value="value"></el-option> -->
+          </el-select>
+        </el-form-item>
+        <el-form-item label="操作系统" prop="os">
+          <el-select v-model="form.os" placeholder="请选择">
+            <!-- <el-option label="label" value="value"></el-option> -->
+          </el-select>
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
           <el-input
-            v-model="form.numText"
+            v-model="form.remark"
             type="textarea"
             :rows="2"
             show-word-limit
             :maxlength="300"
+            placeholder="请输入"
           />
-        </el-form-item>
-
-        <el-form-item label="选择" prop="numText">
-          <el-select v-model="form.select" placeholder="Select">
-            <el-option label="label" value="value"></el-option>
-          </el-select>
         </el-form-item>
       </el-form>
     </div>
     <template #footer v-if="showFooter">
       <span>
         <el-button @click="switcher" v-if="showCancel">取消</el-button>
-        <el-button type="primary" @click="confirm" v-if="showConfirm">确认</el-button>
+        <el-button type="primary" @click="confirm" v-if="showConfirm"
+          >确认</el-button
+        >
       </span>
     </template>
   </el-dialog>
 </template>
 <script>
+import { appAdd, appEdit } from "@/api/application";
 export default {
-  name: "SubscriptionEdit",
+  name: "ApplicationAdd",
   props: {
     data: null, // 数据
-    title: { type: String, default: '标题' }, // 标题
-    type: { type: String, default: 'MODIFY' }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
-    showFooter: { type: Boolean, default: true },  // 是否显示底部
-    showCancel: { type: Boolean, default: true },  // 是否显示取消按钮
+    title: { type: String, default: "标题" }, // 标题
+    type: { type: String, default: "MODIFY" }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
+    showFooter: { type: Boolean, default: true }, // 是否显示底部
+    showCancel: { type: Boolean, default: true }, // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
     refresh: { type: Function, default: () => {} }, // 刷新函数
+    statusList: {type: Array, default: []}, // 状态列表
+    subscribeList: {type: Array, default: []}, // 订阅
+    proxyList: {type: Array, default: []}, // 代理
   },
-  data () {
+  data() {
     return {
       visible: false,
       form: {
-        text: '文本输入框',
-        number: 222,
-        numText: '多行文本',
-        select: 'value'
-      }
+        name: "",
+        username: "",
+        password: "",
+        subscribeId: "",
+        url: "",
+        status: "",
+        userAgent: "",
+        height: null,
+        width: null,
+        language: "",
+        os: "",
+        remark: "",
+      },
     };
   },
-  created () {
+  created() {
     this.noRender = {
       rules: {
-        text: [{ required: true, trigger: ['change'], message: '不能为空', }],
-      }
-    }
+        name: [{ required: true, trigger: ["change"], message: "不能为空" }],
+        subscribeId: [{ required: true, trigger: ["change"], message: "不能为空" }],
+        status: [{ required: true, trigger: ["change"], message: "不能为空" }],
+      },
+    };
   },
   methods: {
     // 开始关闭弹窗
-    switcher () {
-      if(this.visible){
+    switcher(data) {
+      if (this.visible) {
         this.visible = !this.visible;
-        return
+        return;
+      }
+      if (data) {
+        this.form = {
+          id: data.id,
+          name: data.name,
+          username: data.username,
+          password: data.password,
+          subscribeId: data.subscribeId,
+          url: data.url,
+          status: data.status,
+          userAgent: data.userAgent,
+          height: data.height || null,
+          width: data.width || null,
+          language: data.language,
+          os: data.os,
+          remark: data.remark,
+        };
+      } else {
+        this.form = {
+          name: "",
+          username: "",
+          password: "",
+          subscribeId: "",
+          url: "",
+          status: "",
+          userAgent: "",
+          height: null,
+          width: null,
+          language: "",
+          os: "",
+          remark: "",
+        };
       }
       this.visible = !this.visible;
     },
     // 确认按钮
-    confirm () {
+    confirm() {
       this.$refs.formRef.validate().then(() => {
-        console.log('校验通过',)
-      }).catch(error => {
-        console.log('校验失败')
-      })
+        if (this.form.hasOwnProperty("id")) {
+          appEdit(this.form).then(() => {
+            this.switcher();
+            this.refresh();
+          });
+        } else {
+          appAdd(this.form).then(() => {
+            this.switcher();
+            this.refresh();
+          });
+        }
+      });
     },
   },
 };

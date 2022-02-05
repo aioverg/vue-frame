@@ -9,7 +9,14 @@ const tableOption = [
   { key: 'updateDate----', label: '状态', width: '', sortable: true },
 ]
 
-export {
-  tableOption,
-  pagination
+const status = [
+  {key: 'unpaid', label: '未支付'},
+  {key: 'paid', label: '已支付'},
+  {key: 'refund', label: '退款'},
+  {key: 'finished', label: '已完成'},
+]
+export default {
+  tableOption: tableOption,
+  pagination: pagination,
+  status: status,
 }
