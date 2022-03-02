@@ -10,7 +10,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
+    Microsoft YaHei, Arial, sans-serif;
   margin: 0;
 }
 
@@ -20,7 +21,7 @@ body {
   width: 8px;
   height: 12px;
   border-radius: 6px;
-  background-color: rgba(35, 46, 64, .05);
+  background-color: rgba(35, 46, 64, 0.05);
 }
 
 ::-webkit-scrollbar-thumb {
@@ -57,5 +58,8 @@ body {
 }
 .el-dialog__header {
   background: #f2f4f7;
+}
+.el-pagination {
+  justify-content: flex-end;
 }
 /** elemelt 组件的全局样式修改 --- end **/
