@@ -64,6 +64,9 @@
           :label="item.label"
           :sortable="item.sortable"
           :prop="item.key"
+          :show-overflow-tooltip="item.tooltip"
+          :formatter="formatter"
+          :min-width="item.minWidth"
         ></el-table-column>
         <el-table-column width="240" label="操作">
           <template #default="scope">
@@ -72,7 +75,7 @@
             >
             <el-button type="danger" plain @click="del(scope)">删除</el-button>
             <el-button type="warning" plain @click="stop(scope)">
-              {{ scope.row.status === "active" ? "下架" : "上架" }}
+              {{ scope.row.status === 'active' ? '下架' : '上架' }}
             </el-button>
           </template>
         </el-table-column>
@@ -101,28 +104,28 @@
 </template>
 
 <script>
-import setting from "./setting";
-import KlEdit from "./widget/edit.vue";
+import setting from './setting'
+import KlEdit from './widget/edit.vue'
 import {
   subscribeList,
   subscribeDelete,
   subscribeStatus,
   groupList,
   activityList,
-} from "@/api/subscription";
-import moment from "moment";
+} from '@/api/subscription'
+import moment from 'moment'
 export default {
-  name: "SubscriptionList",
+  name: 'SubscriptionList',
   components: { KlEdit },
   data() {
     return {
       form: {
-        groupId: "",
-        name: "",
+        groupId: '',
+        name: '',
         pageNo: 1,
         pageSize: setting.pagination.pageSize,
         // sort: {},
-        status: "",
+        status: '',
       },
       groupList: [],
       activityList: [],
@@ -131,98 +134,110 @@ export default {
         total: 0,
       },
       klProps: {
-        title: "",
+        title: '',
       },
-    };
+    }
   },
   methods: {
     // 搜索
     search() {
-      this.query();
+      this.query()
     },
     // 新增
     add() {
-      this.klProps = { ...this.klProps, title: "新增订阅" };
-      this.$refs.edit.switcher();
+      this.klProps = { ...this.klProps, title: '新增订阅' }
+      this.$refs.edit.switcher()
     },
     // 编辑
     edit(scope) {
-      this.klProps = { ...this.klProps, title: "编辑订阅" };
-      this.$refs.edit.switcher(scope.row);
+      this.klProps = { ...this.klProps, title: '编辑订阅' }
+      this.$refs.edit.switcher(scope.row)
     },
     // 删除
     del(scope) {
       subscribeDelete(scope.row.id).then(() => {
-        this.query();
-      });
+        this.query()
+      })
     },
     // 禁用|下架
     stop(scope) {
       subscribeStatus({
         id: scope.row.id,
-        status: scope.row.status === "disable" ? "active" : "disable",
+        status: scope.row.status === 'disable' ? 'active' : 'disable',
       }).then(() => {
-        this.query();
-      });
+        this.query()
+      })
     },
     // 改变分页
     sizeChange(val) {
-      form.pageSize = val;
-      this.query();
+      form.pageSize = val
+      this.query()
     },
     // 改变页码
     pageNoChange() {
-      this.query();
+      this.query()
     },
     // 排序
     sortChange(calb) {
       const asc =
-        calb.order === "ascending"
+        calb.order === 'ascending'
           ? true
-          : calb.order === "descending"
+          : calb.order === 'descending'
           ? false
-          : "";
-      const form = { ...this.form };
-      if (typeof asc === "boolean") {
-        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+          : ''
+      const form = { ...this.form }
+      if (typeof asc === 'boolean') {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey }
       }
-      this.query(form);
+      this.query(form)
     },
     // 查询
     query(form) {
       subscribeList(form || this.form).then((res) => {
         res.data.records.forEach((item) => {
           item.createDate = moment(item.createDate).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
+            'YYYY-MM-DD hh:mm:ss'
+          )
           item.updateDate = moment(item.updateDate).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
-        });
+            'YYYY-MM-DD hh:mm:ss'
+          )
+        })
         this.tableData = {
           data: res.data.records,
           total: res.data.total,
-        };
-      });
+        }
+      })
+    },
+    // 过滤数据
+    formatter(...props) {
+      if (Array.isArray(props[2])) {
+        if (props[2].length) {
+          return props[2].reduce((pre, cur) => cur.name + ',' + pre.name)
+        } else {
+          return ''
+        }
+      } else {
+        return props[2]
+      }
     },
   },
   created() {
-    this.setting = setting;
+    this.setting = setting
     groupList({
       pageNo: 1,
       pageSize: 1000,
     }).then((res) => {
-      this.groupList = res.data.records;
-    });
+      this.groupList = res.data.records
+    })
     activityList({
       pageNo: 1,
       pageSize: 1000,
     }).then((res) => {
-      this.activityList = res.data.records;
-    });
-    this.query();
+      this.activityList = res.data.records
+    })
+    this.query()
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

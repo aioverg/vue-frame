@@ -101,13 +101,29 @@ function couponList (data) {
     data: data
   }, false)
 }
-// 删除分组
+// 删除代金券
 function couponDelete (id) {
   return request({
     url: `/coupon/${id}`,
     method: 'delete',
   })
 }
+// 更改代金券状态
+function couponStatus (id) {
+  return request({
+    url: `/coupon/status/${id}`,
+    method: 'put',
+  })
+}
+// 批量更新代金券状态
+function couponStatusBatch (data) {
+  return request({
+    url: `/coupon/status/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
+
 
 
 // 新增订阅
@@ -165,6 +181,8 @@ export {
   couponEdit,
   couponList,
   couponDelete,
+  couponStatus,
+  couponStatusBatch,
   subscribeAdd,
   subscribeEdit,
   subscribeList,

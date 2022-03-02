@@ -17,13 +17,35 @@
         <el-form-item label="活动名称" prop="name">
           <el-input v-model="form.name" placeholder="活动名称" />
         </el-form-item>
-        <el-form-item label="活动规则" prop="number">
-          <el-form-item label="满" prop="_full">
-            <el-input-number v-model="form._full" :min="0" :controls="false" />
+        <el-form-item label="活动规则">
+          <el-select v-model="form.type" placeholder="Select" @change="change">
+            <el-option
+              v-for="item in noRender.type"
+              :key="item.key"
+              :label="item.label"
+              :value="item.key"
+            >
+            </el-option>
+          </el-select>
+          <el-form-item v-show="form.type === 'full_sale'" key="full_sale">
+            <el-form-item label="满" prop="rule.full">
+              <el-input-number
+                v-model="form.rule.full"
+                :min="0"
+                :controls="false"
+              />
+            </el-form-item>
+            <el-form-item label="减" prop="rule.reduce">
+              <el-input-number
+                v-model="form.rule.reduce"
+                :min="0"
+                :controls="false"
+              />
+            </el-form-item>
           </el-form-item>
-          <el-form-item label="减" prop="_reduce">
+          <el-form-item v-show="form.type === 'discount'" key="discount">
             <el-input-number
-              v-model="form._reduce"
+              v-model="form.rule.discount"
               :min="0"
               :controls="false"
             />
@@ -52,13 +74,25 @@
   </el-dialog>
 </template>
 <script>
-import { activityAdd, activityEdit } from "@/api/subscription";
+import { activityAdd, activityEdit } from '@/api/subscription'
+import { type } from '../setting'
+import { cloneDeep } from 'lodash'
+const initForm = {
+  name: '',
+  remark: '',
+  rule: { full: 0, reduce: 0 },
+  type: 'full_sale',
+}
+const initRule = {
+  full_sale: { full: 0, reduce: 0 },
+  discount: { discount: 0 },
+}
 export default {
-  name: "SubscriptionEdit",
+  name: 'SubscriptionEdit',
   props: {
     data: null, // 数据
-    title: { type: String, default: "标题" }, // 标题
-    type: { type: String, default: "MODIFY" }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
+    title: { type: String, default: '标题' }, // 标题
+    type: { type: String, default: 'MODIFY' }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
     showFooter: { type: Boolean, default: true }, // 是否显示底部
     showCancel: { type: Boolean, default: true }, // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
@@ -67,78 +101,61 @@ export default {
   data() {
     return {
       visible: false,
-      form: {
-        name: "",
-        remark: "",
-        rule: "",
-        type: "full_sale",
-        _full: 0,
-        _reduce: 0,
-      },
-    };
+      form: cloneDeep(initForm),
+    }
   },
   created() {
     this.noRender = {
       rules: {
-        name: [{ required: true, trigger: ["change"], message: "不能为空" }],
+        name: [{ required: true, trigger: ['change'], message: '不能为空' }],
       },
-    };
+      type: type,
+    }
   },
   methods: {
     // 开启关闭弹窗
     switcher(data) {
       if (this.visible) {
-        this.visible = !this.visible;
-        return;
+        this.visible = !this.visible
+        return
       }
       if (data) {
-        const rule = JSON.parse(data.rule);
         this.form = {
           id: data.id,
           name: data.name,
           remark: data.remark,
-          rule: "",
+          rule: JSON.parse(data.rule),
           type: data.type,
-          _full: rule.full || 0,
-          _reduce: rule.reduce || 0,
-        };
+        }
       } else {
-        this.form = {
-          name: "",
-          remark: "",
-          rule: "",
-          type: "full_sale",
-          _full: 0,
-          _reduce: 0,
-        };
+        this.form = cloneDeep(initForm)
       }
-      this.visible = !this.visible;
+      this.visible = !this.visible
     },
     // 确认按钮
     confirm() {
-      this.$refs.formRef
-        .validate()
-        .then(() => {
-          this.form.rule = { full: this.form._full, reduce: this.form._reduce };
-          if (this.form.hasOwnProperty("id")) {
-            activityEdit(this.form).then(() => {
-              this.switcher();
-              this.refresh();
-            });
-          } else {
-            activityAdd(this.form).then(() => {
-              this.switcher();
-              this.refresh();
-            });
-          }
-        })
-        .catch((error) => {
-          console.log("校验失败");
-        });
+      this.$refs.formRef.validate().then(() => {
+        console.log(111111, this.form)
+        if (this.form.hasOwnProperty('id')) {
+          activityEdit(this.form).then(() => {
+            this.switcher()
+            this.refresh()
+          })
+        } else {
+          activityAdd(this.form).then(() => {
+            this.switcher()
+            this.refresh()
+          })
+        }
+      })
+    },
+    // 活动规则改变
+    change(val) {
+      this.form.rule = { ...initRule[val] }
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
-@import "~@/styles/form.scss";
+@import '~@/styles/form.scss';
 </style>

@@ -62,6 +62,8 @@
           :prop="item.key"
           :label="item.label"
           :sortable="item.sortable"
+          :show-overflow-tooltip="item.tooltip"
+          :min-width="item.minWidth"
         ></el-table-column>
         <el-table-column width="240" label="操作">
           <template #default="scope">
@@ -70,7 +72,7 @@
             >
             <el-button type="danger" plain @click="del(scope)">删除</el-button>
             <el-button type="warning" plain @click="stop(scope)">
-              {{ scope.row.status === "disable" ? "启用" : "禁用" }}
+              {{ scope.row.status === 'disable' ? '启用' : '禁用' }}
             </el-button>
           </template>
         </el-table-column>
@@ -93,112 +95,117 @@
 </template>
 
 <script>
-import setting from "./setting";
-import KlEdit from "./widget/edit.vue";
+import setting from './setting'
+import KlEdit from './widget/edit.vue'
 import {
   activityList,
   activityDelete,
   activityStatus,
-} from "@/api/subscription";
-import moment from "moment";
+} from '@/api/subscription'
+import moment from 'moment'
 export default {
-  name: "SubscriptionActivity",
+  name: 'SubscriptionActivity',
   components: { KlEdit },
   data() {
     return {
       form: {
-        name: "", // 名称
+        name: '', // 名称
         pageNo: 1,
         pageSize: setting.pagination.pageSize,
         // sort: {},
-        status: "",
-        type: "",
+        status: '',
+        type: '',
       },
       klProps: {
-        title: "",
+        title: '',
       },
       tableData: {
         data: [],
         total: 0,
       },
-    };
+    }
   },
   methods: {
     // 搜索
     search() {
-      this.query();
+      this.query()
     },
     // 新增
     add() {
-      this.klProps = { ...this.klProps, title: "新增优惠活动" };
-      this.$refs.edit.switcher();
+      this.klProps = { ...this.klProps, title: '新增优惠活动' }
+      this.$refs.edit.switcher()
     },
     // 编辑
     edit(scope) {
-      this.klProps = { ...this.klProps, title: "编辑优惠活动" };
-      this.$refs.edit.switcher(scope.row);
+      this.klProps = { ...this.klProps, title: '编辑优惠活动' }
+      this.$refs.edit.switcher(scope.row)
     },
     // 删除
     del(scope) {
       activityDelete(scope.row.id).then(() => {
-        this.query();
-      });
+        this.query()
+      })
     },
     // 禁用|下架
     stop(scope) {
       activityStatus({
         id: scope.row.id,
-        status: scope.row.status === "disable" ? "active" : "disable",
+        status: scope.row.status === 'disable' ? 'active' : 'disable',
       }).then(() => {
-        this.query();
-      });
+        this.query()
+      })
     },
     // 改变分页
     sizeChange(val) {
-      this.form.pageSize = val;
-      this.query();
+      this.form.pageSize = val
+      this.query()
     },
     // 改变页码
     pageNoChange(val) {
-      this.query();
+      this.query()
     },
     // 排序
     sortChange(calb) {
       const asc =
-        calb.order === "ascending"
+        calb.order === 'ascending'
           ? true
-          : calb.order === "descending"
+          : calb.order === 'descending'
           ? false
-          : "";
-      const form = { ...this.form };
-      if (typeof asc === "boolean") {
-        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+          : ''
+      const form = { ...this.form }
+      if (typeof asc === 'boolean') {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey }
       }
-      this.query(form);
+      this.query(form)
     },
     // 查询
     query(form) {
       activityList(form || this.form).then((res) => {
         res.data.records.forEach((item) => {
           item.createDate = moment(item.createDate).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
+            'YYYY-MM-DD hh:mm:ss'
+          )
           item.updateDate = moment(item.updateDate).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
-        });
+            'YYYY-MM-DD hh:mm:ss'
+          )
+        })
         this.tableData = {
           data: res.data.records,
           total: res.data.total,
-        };
-      });
+        }
+      })
+    },
+    // 过滤数据
+    formatter(...props) {
+      console.log(1111111, props)
+      return props[2]
     },
   },
   created() {
-    this.setting = setting;
-    this.query();
+    this.setting = setting
+    this.query()
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

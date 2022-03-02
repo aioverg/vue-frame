@@ -53,19 +53,24 @@
         height="px"
         @sort-change="sortChange"
       >
-        <el-table-column type="index" width="80" label="编号" />
+        <el-table-column type="index" width="55" label="编号" />
         <el-table-column
           v-for="item in setting.tableOption"
           :key="item.key"
           :label="item.label"
           :prop="item.key"
           :sortable="item.sortable"
+          :show-overflow-tooltip="item.tooltip"
+          :min-width="item.minWidth"
         ></el-table-column>
-        <el-table-column width="160" label="操作">
+        <el-table-column width="240" label="操作">
           <template #default="scope">
             <el-button type="primary" plain @click="edit(scope)"
               >编辑</el-button
             >
+            <el-button type="warning" plain @click="stop(scope)">
+              {{ scope.row.status === 'active' ? '禁用' : '启用' }}
+            </el-button>
             <el-button type="danger" plain @click="del(scope)">删除</el-button>
           </template>
         </el-table-column>
@@ -95,25 +100,25 @@
 </template>
 
 <script>
-import setting from "./setting";
-import KlEdit from "./widget/edit.vue";
-import { appList, appDelete, proxyList } from "@/api/application";
-import {subscribeList} from "@/api/subscription";
-import moment from "moment";
+import setting from './setting'
+import KlEdit from './widget/edit.vue'
+import { appList, appDelete, appStatus, proxyList } from '@/api/application'
+import { subscribeList } from '@/api/subscription'
+import moment from 'moment'
 export default {
-  name: "ApplicationList",
+  name: 'ApplicationList',
   components: { KlEdit },
   data() {
     return {
       form: {
-        name: "",
-        status: "",
-        createDate: "",
+        name: '',
+        status: '',
+        createDate: '',
         pageNo: 1,
         pageSize: setting.pagination.pageSize,
       },
       klProps: {
-        title: "",
+        title: '',
       },
       proxyList: [],
       subscribeList: [],
@@ -121,93 +126,102 @@ export default {
         data: [],
         total: 0,
       },
-    };
+    }
   },
   methods: {
     // 搜索
     search() {
-      this.query();
+      this.query()
     },
     // 新增
     add() {
-      this.klProps = { ...this.klProps, title: "新增应用" };
-      this.$refs.edit.switcher();
+      this.klProps = { ...this.klProps, title: '新增应用' }
+      this.$refs.edit.switcher()
     },
     // 编辑
     edit(scope) {
-      this.klProps = { ...this.klProps, title: "编辑应用" };
-      this.$refs.edit.switcher(scope.row);
+      this.klProps = { ...this.klProps, title: '编辑应用' }
+      this.$refs.edit.switcher(scope.row)
     },
     // 删除
     del(scope) {
       appDelete(scope.row.id).then(() => {
-        this.query();
-      });
+        this.query()
+      })
+    },
+    // 更改状态
+    stop() {
+      appStatus({
+        id: scope.row.id,
+        status: scope.row.status === 'disable' ? 'active' : 'disable',
+      }).then(() => {
+        this.query()
+      })
     },
     // 改变分页
     sizeChange(val) {
-      this.form.pageSize = val;
-      this.query();
+      this.form.pageSize = val
+      this.query()
     },
     // 改变页码
     pageNoChange() {
-      this.query();
+      this.query()
     },
     // 排序
     sortChange(calb) {
       const asc =
-        calb.order === "ascending"
+        calb.order === 'ascending'
           ? true
-          : calb.order === "descending"
+          : calb.order === 'descending'
           ? false
-          : "";
-      const form = { ...this.form };
-      if (typeof asc === "boolean") {
-        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey };
+          : ''
+      const form = { ...this.form }
+      if (typeof asc === 'boolean') {
+        form.sort = { asc: asc, fieldName: calb.column.rawColumnKey }
       }
-      this.query(form);
+      this.query(form)
     },
     // 查询
     query(form) {
       appList(form || this.form).then((res) => {
         res.data.records.forEach((item) => {
-          const aim = setting.status.find(item1 => item1.key === item.status)
-          if(aim){
+          const aim = setting.status.find((item1) => item1.key === item.status)
+          if (aim) {
             item.statusName = aim.label
-          }else{
+          } else {
             item.statusName = item.status
           }
           item.createDate = moment(item.createDate).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
+            'YYYY-MM-DD hh:mm:ss'
+          )
           item.updateDate = moment(item.updateDate).format(
-            "YYYY-MM-DD hh:mm:ss"
-          );
-        });
+            'YYYY-MM-DD hh:mm:ss'
+          )
+        })
         this.tableData = {
           data: res.data.records,
           total: res.data.total,
-        };
-      });
+        }
+      })
     },
   },
   created() {
-    this.setting = setting;
+    this.setting = setting
     subscribeList({
       pageNo: 1,
       pageSize: 1000,
     }).then((res) => {
-      this.subscribeList = res.data.records;
-    });
+      this.subscribeList = res.data.records
+    })
     proxyList({
       pageNo: 1,
       pageSize: 1000,
     }).then((res) => {
-      this.proxyList = res.data.records;
-    });
-    this.query();
+      this.proxyList = res.data.records
+    })
+    this.query()
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>

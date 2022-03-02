@@ -16,13 +16,13 @@
           :index="item1.name"
         >
           <template #title>
-            <span style="padding-left: 28px">{{item1.meta.title}}</span>
+            <span style="padding-left: 28px">{{ item1.meta.title }}</span>
           </template>
         </el-menu-item>
         <el-sub-menu v-else :key="item1.name" :index="item1.name">
           <template #title>
             <kl-icon :iconName="item1.meta.icon" />
-            <span>{{item1.meta.title}}</span>
+            <span>{{ item1.meta.title }}</span>
           </template>
           <el-menu-item
             v-for="item2 in item1.children"
@@ -30,40 +30,39 @@
             :index="item2.name"
             :route="item2"
           >
-            <span style="padding-left: 22px">{{item2.meta.title}}</span>
+            <span style="padding-left: 22px">{{ item2.meta.title }}</span>
           </el-menu-item>
         </el-sub-menu>
       </template>
     </el-menu>
-    <!-- </div> -->
   </div>
 </template>
 
 <script>
 export default {
   name: 'LayoutAside',
-  data () {
+  data() {
     return {
-      active: 'Home'
+      active: 'Home',
     }
   },
   computed: {
-    menus () {
+    menus() {
       const usedMenus = ['Home', 'Application', 'Member', 'Subscription']
-      return this.$router.options.routes.filter(item => {
+      return this.$router.options.routes.filter((item) => {
         return item.name && usedMenus.includes(item.name)
       })
     },
   },
   methods: {
-    home(){
+    home() {
       this.$router.push('/home')
     },
-    init(){
+    init() {
       this.active = this.$router.currentRoute._value.name
-    }
+    },
   },
-  mounted () {
+  mounted() {
     this.init()
   },
 }
@@ -74,6 +73,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   .title {
     height: 60px;
     line-height: 60px;

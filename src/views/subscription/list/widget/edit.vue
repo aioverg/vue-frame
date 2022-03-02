@@ -16,16 +16,16 @@
         <el-form-item label="名字" prop="name">
           <el-input v-model="form.name" />
         </el-form-item>
-        <el-form-item label="价格" prop="currentPrice">
+        <el-form-item label="原始价格" prop="originalPrice">
           <el-input-number
-            v-model="form.currentPrice"
+            v-model="form.originalPrice"
             :min="0"
             :controls="false"
           />
         </el-form-item>
-        <el-form-item label="原始价格" prop="originalPrice">
+        <el-form-item label="价格" prop="currentPrice">
           <el-input-number
-            v-model="form.originalPrice"
+            v-model="form.currentPrice"
             :min="0"
             :controls="false"
           />
@@ -74,13 +74,13 @@
   </el-dialog>
 </template>
 <script>
-import { subscribeAdd, subscribeEdit } from "@/api/subscription";
+import { subscribeAdd, subscribeEdit } from '@/api/subscription'
 export default {
-  name: "SubscriptionEdit",
+  name: 'SubscriptionEdit',
   props: {
     data: null, // 数据
-    title: { type: String, default: "标题" }, // 标题
-    type: { type: String, default: "MODIFY" }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
+    title: { type: String, default: '标题' }, // 标题
+    type: { type: String, default: 'MODIFY' }, // 表单类型, ADD新增 | MODIFY修改 | READ只读
     showFooter: { type: Boolean, default: true }, // 是否显示底部
     showCancel: { type: Boolean, default: true }, // 是否显示取消按钮
     showConfirm: { type: Boolean, default: true }, // 是否显示确认按钮
@@ -92,69 +92,75 @@ export default {
     return {
       visible: false,
       form: {
-        name: "",
+        name: '',
         currentPrice: 0,
         originalPrice: 0,
-        groupId: "",
-        promotionId: "",
-        remark: "",
+        groupId: '',
+        promotionId: '',
+        remark: '',
       },
-    };
+    }
   },
   created() {
     this.noRender = {
       rules: {
-        name: [{ required: true, trigger: ["change"], message: "不能为空" }],
+        name: [{ required: true, trigger: ['change'], message: '不能为空' }],
         currentPrice: [
-          { required: true, trigger: ["change"], message: "不能为空" },
+          { required: true, trigger: ['change'], message: '不能为空' },
+        ],
+        originalPrice: [
+          { required: true, trigger: ['change'], message: '不能为空' },
         ],
       },
-    };
+    }
   },
   methods: {
     // 开始关闭弹窗
     switcher(data) {
       if (this.visible) {
-        this.visible = !this.visible;
-        return;
+        this.visible = !this.visible
+        return
       }
       if (data) {
         this.form = {
           id: data.id,
           name: data.name,
           remark: data.remark,
-        };
+          currentPrice: data.currentPrice,
+          originalPrice: data.originalPrice,
+          groupId: data.groupId,
+        }
       } else {
         this.form = {
-          name: "",
+          name: '',
           currentPrice: 0,
           originalPrice: 0,
-          groupId: "",
-          promotionId: "",
-          remark: "",
-        };
+          groupId: '',
+          promotionId: '',
+          remark: '',
+        }
       }
-      this.visible = !this.visible;
+      this.visible = !this.visible
     },
     // 确认按钮
     confirm() {
       this.$refs.formRef.validate().then(() => {
-        if (this.form.hasOwnProperty("id")) {
+        if (this.form.hasOwnProperty('id')) {
           subscribeEdit(this.form).then(() => {
-            this.switcher();
-            this.refresh();
-          });
+            this.switcher()
+            this.refresh()
+          })
         } else {
           subscribeAdd(this.form).then(() => {
-            this.switcher();
-            this.refresh();
-          });
+            this.switcher()
+            this.refresh()
+          })
         }
-      });
+      })
     },
   },
-};
+}
 </script>
 <style lang="scss" scoped>
-@import "~@/styles/form.scss";
+@import '~@/styles/form.scss';
 </style>
