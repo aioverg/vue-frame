@@ -17,6 +17,15 @@ function userEdit (data) {
   })
 }
 
+// 更新用户
+function userStatus (data) {
+  return request({
+    url: `/user/status/${data.id}`,
+    method: 'put',
+    data: data
+  })
+}
+
 // 用户列表
 function userList (data) {
   return request({
@@ -81,6 +90,7 @@ function messageStatus (id) {
 export {
   userAdd,
   userEdit,
+  userStatus,
   userList,
   userDelete,
   orderList,
